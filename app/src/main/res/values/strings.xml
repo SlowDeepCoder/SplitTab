@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">SplitTab</string>
+    <string name="tab_text_1">Add Payment</string>
+    <string name="tab_text_2">Overview</string>
+    <string name="tab_text_3">Graphs</string>
+    <string name="amount">Amount</string>
+    <string name="description">Description</string>
+    <string name="add_payment">Add Payment</string>
+
+
+    <string name="dollar">USD</string>
+    <string name="swedish_krona">SEK</string>
+
+
+
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="mars">Mars</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+    <string name="channel">Channel</string>
+</resources>
