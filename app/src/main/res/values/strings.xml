@@ -26,4 +26,6 @@
     <string name="december">December</string>
     <string name="channel">Channel</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_out">Sign out</string>
+    <string name="app_title">SplitTab</string>
 </resources>
