@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "57347457375",
+    "firebase_url": "https://splittab-24fbc.firebaseio.com",
+    "project_id": "splittab-24fbc",
+    "storage_bucket": "splittab-24fbc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57347457375:android:28820e25be05c9d9a4b6ea",
+        "android_client_info": {
+          "package_name": "com.example.splittab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57347457375-rleaibd5jn2pnr7307sm6mrnqnetg0lk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwjwa77t4P9yGc9Ea7gXwS5-cKc4nRK58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57347457375-rleaibd5jn2pnr7307sm6mrnqnetg0lk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

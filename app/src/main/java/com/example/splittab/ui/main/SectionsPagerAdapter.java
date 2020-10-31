@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.splittab.AddPaymentFragment;
-import com.example.splittab.GraphsFragment;
+import com.example.splittab.HistoryFragment;
 import com.example.splittab.OverviewFragment;
 import com.example.splittab.R;
 
@@ -39,7 +39,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = new OverviewFragment();
                 break;
             case 2:
-                fragment = new GraphsFragment();
+                fragment = new HistoryFragment();
                 break;
         }
         return fragment;
