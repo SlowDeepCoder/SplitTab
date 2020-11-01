@@ -3,24 +3,20 @@ package com.example.splittab;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.splittab.ui.main.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
+    private GroupManager groupManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +28,10 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
+        groupManager = GroupManager.getInstance();
+        groupManager.loadGroupsFromFireBase();
 
         setToolbar();
-
-
-
     }
 
     private void setToolbar() {
@@ -48,10 +43,14 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.actionbarGroup:
+                        GroupsDialog dialog = new GroupsDialog();
+                        dialog.show(MainActivity.this.getSupportFragmentManager(), "");
                         return true;
 
                     case R.id.actionbarSettings:
-                        Toast.makeText(MainActivity.this, "heej", Toast.LENGTH_LONG).show();
+                        ////
+                        ////   Not done yet
+                        ////
                         return true;
                     case R.id.actionbarSignOut:
                         FirebaseAuth.getInstance().signOut();
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 }

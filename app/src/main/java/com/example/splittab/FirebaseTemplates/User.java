@@ -1,4 +1,4 @@
-package com.example.splittab;
+package com.example.splittab.FirebaseTemplates;
 
 public class User {
     private String name, email, ID;
@@ -9,9 +9,7 @@ public class User {
         this.ID = ID;
     }
 
-    public User(){
-
-    }
+    public User(){}
 
     public String getName() {
         return name;

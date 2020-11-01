@@ -6,18 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
-import com.example.splittab.ui.main.SectionsPagerAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,16 +15,16 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class AddPaymentFragment extends Fragment {
-    Spinner daySpinner, monthSpinner, yearSpinner;
-    Button addPaymentButton;
-    Payments payments;
+    private Spinner daySpinner, monthSpinner, yearSpinner;
+    private Button addPaymentButton;
+    private PaymentManager paymentManager;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_payment_layout, container, false);
 
-        payments = Payments.getInstance();
+        paymentManager = PaymentManager.getInstance();
         findViewsByTheirId(view);
         setSpinnerDate();
         setOnClickListerners();
@@ -46,7 +36,7 @@ public class AddPaymentFragment extends Fragment {
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                payments.addPayment(new Payment());
+                paymentManager.addPayment(new Payment());
             }
         });
     }
