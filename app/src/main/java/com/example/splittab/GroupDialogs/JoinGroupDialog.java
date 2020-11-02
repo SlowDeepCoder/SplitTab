@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -50,17 +51,25 @@ public class JoinGroupDialog extends DialogFragment {
         v.findViewById(R.id.join_group_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                joinGroupAndSaveToFireBase();
-                dismiss();
+                String key = editText.getText().toString().trim();
+                if (key.length() != 5) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.enter_5_char), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(checkIfInGroup(key)){
+                    Toast.makeText(getContext(), getResources().getString(R.string.already_in_group), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    joinGroupAndSaveToFireBase(key);
+                }
             }
         });
     }
 
-    private void joinGroupAndSaveToFireBase() {
+    private void joinGroupAndSaveToFireBase(String id) {
+        final String key = id;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        final String key = editText.getText().toString().trim();
 
         final DatabaseReference groupsReference = database.getReference("groups");
         groupsReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -72,17 +81,19 @@ public class JoinGroupDialog extends DialogFragment {
                             GroupManager groupManager = GroupManager.getInstance();
                             Group group = dataSnap.getValue(Group.class);
                             groupManager.add(group);
-
-
-                            GroupsDialog.groupAdapter.notifyDataSetChanged();
+                            
+                            GroupListDialog.groupAdapter.notifyDataSetChanged();
                             AddPaymentFragment.adapter.add(group.getName());
                             AddPaymentFragment.adapter.notifyDataSetChanged();
 
                             groupsReference.child(key).child("participants").child(user.getUid()).setValue(user.getDisplayName());
                             database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(group.getName());
+                            dismiss();
+                            return;
                         }
                     }
                 }
+                Toast.makeText(getContext(), getResources().getString(R.string.that_ID_doesnt_exist), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -90,5 +101,14 @@ public class JoinGroupDialog extends DialogFragment {
 
             }
         });
+    }
+
+    private boolean checkIfInGroup(String key){
+        GroupManager groupManager = GroupManager.getInstance();
+        for (Group group : groupManager.getGroupArrayList()){
+            if(key.equals(group.getKey()))
+                return true;
+        }
+        return false;
     }
 }

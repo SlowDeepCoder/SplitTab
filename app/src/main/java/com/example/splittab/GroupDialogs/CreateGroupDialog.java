@@ -66,7 +66,7 @@ public class CreateGroupDialog extends DialogFragment {
         GroupManager groupManager = GroupManager.getInstance();
         groupManager.add(group);
 
-        GroupsDialog.groupAdapter.notifyDataSetChanged();
+        GroupListDialog.groupAdapter.notifyDataSetChanged();
         AddPaymentFragment.adapter.add(groupName);
         AddPaymentFragment.adapter.notifyDataSetChanged();
 

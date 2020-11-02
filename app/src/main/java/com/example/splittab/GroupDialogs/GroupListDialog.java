@@ -18,7 +18,7 @@ import com.example.splittab.Adapters.GroupAdapter;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
 
-public class GroupsDialog extends DialogFragment {
+public class GroupListDialog extends DialogFragment {
     private ListView listView;
     private GroupManager groupManager;
     public static GroupAdapter groupAdapter;
@@ -60,13 +60,23 @@ public class GroupsDialog extends DialogFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                groupManager.setCurrentGroup(i);
+                dismiss();
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String keyText = groupManager.getGroupArrayList().get(i).getKey();
 
                 ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("Group key", keyText);
                 clipboard.setPrimaryClip(clip);
 
-                Toast.makeText(getContext(), keyText, Toast.LENGTH_SHORT).show();
+                String toastText = keyText + " copied to clipboard";
+                Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
     }

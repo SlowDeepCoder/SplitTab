@@ -3,7 +3,7 @@ package com.example.splittab;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.splittab.GroupDialogs.GroupsDialog;
+import com.example.splittab.GroupDialogs.GroupListDialog;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.widget.Toolbar;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.actionbarGroup:
-                        GroupsDialog dialog = new GroupsDialog();
+                        GroupListDialog dialog = new GroupListDialog();
                         dialog.show(MainActivity.this.getSupportFragmentManager(), "");
                         return true;
 

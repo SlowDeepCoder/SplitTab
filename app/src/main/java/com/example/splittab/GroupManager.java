@@ -34,6 +34,9 @@ public class GroupManager {
 
     public void add(Group group) {
         groupList.add(group);
+
+        if(currentGroup == null)
+            currentGroup = group;
     }
 
     public Group getCurrentGroup() {
@@ -43,6 +46,16 @@ public class GroupManager {
     public void setCurrentGroup(Group currentGroup) {
         this.currentGroup = currentGroup;
     }
+
+    public void setCurrentGroup(int index) {
+        if (index < groupList.size() && index >= 0) {
+            this.currentGroup = groupList.get(index);
+            Log.d("setCurrentGroup", "currentGroup satt till " + currentGroup.getName());
+        }
+    }
+
+
+
 
     public void loadGroupsFromFireBase() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
