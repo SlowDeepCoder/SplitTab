@@ -81,7 +81,7 @@ public class JoinGroupDialog extends DialogFragment {
                             GroupManager groupManager = GroupManager.getInstance();
                             Group group = dataSnap.getValue(Group.class);
                             groupManager.add(group);
-                            
+
                             GroupListDialog.groupAdapter.notifyDataSetChanged();
                             AddPaymentFragment.adapter.add(group.getName());
                             AddPaymentFragment.adapter.notifyDataSetChanged();
