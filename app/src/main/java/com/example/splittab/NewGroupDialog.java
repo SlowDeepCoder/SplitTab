@@ -52,22 +52,18 @@ public class NewGroupDialog extends DialogFragment {
     private void saveGroupToFirebaseAndGroupManager() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = database.getReference("groups");
 
         String groupName = editText.getText().toString().trim();
-//        String key = database.getReference("groups").push().getKey();
-        String key = GroupManager.generateKey();
+        String key = GroupManager.generateKey();                                 // String key = database.getReference("groups").push().getKey();
         Group group = new Group(key, groupName, user.getUid());
 
-        reference.child(key).setValue(group);
+        database.getReference("groups").child(key).setValue(group);
 
-        reference = database.getReference("users").child(user.getUid()).child("groups").child(key);
-
-        reference.setValue(group);
+        database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(group);
 
         GroupManager groupManager = GroupManager.getInstance();
         groupManager.add(group);
-        
+
         GroupsDialog.groupAdapter.notifyDataSetChanged();
         AddPaymentFragment.adapter.add(groupName);
         AddPaymentFragment.adapter.notifyDataSetChanged();
