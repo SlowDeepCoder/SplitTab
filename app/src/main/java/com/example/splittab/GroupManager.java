@@ -72,11 +72,10 @@ public class GroupManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     groupList.clear();
-                    Log.d("findGroupReference", dataSnapshot.toString());
                     for (String key : groupKeyList) {
                         for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                             if (key.equals(dataSnap.getKey())) {                               /////
-                                Group group = dataSnap.getValue(Group.class);                  /////  Söker efter varje nyckel och laddar in alal grupepr i en lista
+                                Group group = dataSnap.getValue(Group.class);                  /////  Söker efter varje nyckel och laddar in alla grupper i en lista
                                 groupList.add(group);                                          /////
                             }
                         }
