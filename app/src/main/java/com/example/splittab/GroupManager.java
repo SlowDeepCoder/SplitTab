@@ -38,8 +38,6 @@ public class GroupManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         DatabaseReference reference = database.getReference("users").child(user.getUid()).child("groups");
-
-
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -52,13 +50,10 @@ public class GroupManager {
                             }
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
     }
-
-
 }

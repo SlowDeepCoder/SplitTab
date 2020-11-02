@@ -63,12 +63,6 @@
         <item>2020</item>
     </string-array>
 
-    <string-array name="channels">
-        <item>@string/none</item>
-        <item>@string/family</item>
-        <item>@string/travel</item>
-    </string-array>
-
 
     <string name="none">None</string>
     <string name="family">Family</string>

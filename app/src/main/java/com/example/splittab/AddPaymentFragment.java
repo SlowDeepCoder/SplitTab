@@ -5,11 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -35,19 +33,13 @@ public class AddPaymentFragment extends Fragment {
 
         paymentManager = PaymentManager.getInstance();
         findViewsByTheirId(view);
-        setOnClickListerners();
+        setOnClickListeners();
+        setSpinners();
 
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        setSpinners();
-    }
-
-    private void setOnClickListerners() {
+    private void setOnClickListeners() {
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,11 +76,5 @@ public class AddPaymentFragment extends Fragment {
         yearSpinner = (Spinner)view.findViewById(R.id.year_spinner);
         groupSpinner = (Spinner)view.findViewById(R.id.add_payment_group_spinner);
         addPaymentButton = (Button)view.findViewById(R.id.add_payment_button);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("onResume", "onResume in AddPaymentFragment");
     }
 }

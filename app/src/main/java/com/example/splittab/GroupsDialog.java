@@ -32,16 +32,11 @@ public class GroupsDialog extends DialogFragment {
             array.add(group.getName());
 
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, array);
-//        adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item_payment, array);
 
         listView = (ListView)view.findViewById(R.id.groupsDialogListView);
         listView.setAdapter(adapter);
 
-
         setOnClickListerners(view);
-
-
-
         return builder.create();
     }
 

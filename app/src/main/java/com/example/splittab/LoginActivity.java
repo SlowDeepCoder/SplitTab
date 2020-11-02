@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.login_activity_layout);
 
         mAuth = FirebaseAuth.getInstance();
         createRequest();
@@ -66,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d("onActivityResult", "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
@@ -116,9 +115,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (!snapshot.exists())
                     reference.child(user.getUid()).setValue(new User(user.getDisplayName(), user.getEmail(), user.getUid()));       // New user
                 else
-                    GroupManager.getInstance().loadGroupsFromFireBase();        //Old user and load group data
+                    GroupManager.getInstance().loadGroupsFromFireBase();        //Old user, load group data
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
