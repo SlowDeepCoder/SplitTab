@@ -54,7 +54,7 @@ public class NewGroupDialog extends DialogFragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = database.getReference("groups");
 
-        String groupName = editText.getText().toString();
+        String groupName = editText.getText().toString().trim();
         String key = database.getReference("groups").push().getKey();
         Group group = new Group(key, groupName, user.getUid());
 
@@ -66,6 +66,12 @@ public class NewGroupDialog extends DialogFragment {
 
         GroupManager groupManager = GroupManager.getInstance();
         groupManager.add(group);
+
+
+        GroupsDialog.adapter.add(groupName);
+        GroupsDialog.adapter.notifyDataSetChanged();
+        AddPaymentFragment.adapter.add(groupName);
+        AddPaymentFragment.adapter.notifyDataSetChanged();
 
 
     }

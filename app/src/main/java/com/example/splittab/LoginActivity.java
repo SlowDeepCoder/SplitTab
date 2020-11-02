@@ -93,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
     public void signInWithGoogleButton(View view) {
         signIn();
     }
@@ -114,13 +113,14 @@ public class LoginActivity extends AppCompatActivity {
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!snapshot.exists()){
-                    reference.child(user.getUid()).setValue(new User(user.getDisplayName(), user.getEmail(), user.getUid()));
-                    Log.d("newIntentAndSaveUser", "New user, saving data");
-                }
+                if (!snapshot.exists())
+                    reference.child(user.getUid()).setValue(new User(user.getDisplayName(), user.getEmail(), user.getUid()));       // New user
                 else
-                    Log.d("newIntentAndSaveUser", "Old user, not saving data");
+                    GroupManager.getInstance().loadGroupsFromFireBase();        //Old user and load group data
 
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
             }
 
             @Override
@@ -128,10 +128,5 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
-
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

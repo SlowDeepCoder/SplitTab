@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class GroupsDialog extends DialogFragment {
     private ListView listView;
     private ArrayList<String> array = new ArrayList<>();
-    private ArrayAdapter<String> adapter;
+    public static ArrayAdapter<String> adapter;
 
 
     @Override
@@ -32,6 +32,7 @@ public class GroupsDialog extends DialogFragment {
             array.add(group.getName());
 
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, array);
+//        adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item_payment, array);
 
         listView = (ListView)view.findViewById(R.id.groupsDialogListView);
         listView.setAdapter(adapter);

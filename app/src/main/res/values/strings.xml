@@ -24,7 +24,7 @@
     <string name="october">October</string>
     <string name="november">November</string>
     <string name="december">December</string>
-    <string name="channel">Channel</string>
+    <string name="channel">Channel:</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_out">Sign out</string>
     <string name="app_title">SplitTab</string>
@@ -34,4 +34,5 @@
     <string name="new_group">New Group</string>
     <string name="create_group">Create Group</string>
     <string name="group_name">Group Name</string>
+    <string name="group_semi_colon">Group:</string>
 </resources>
