@@ -31,7 +31,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.group_list_item, parent, false);
 
         TextView groupName = (TextView)convertView.findViewById(R.id.group_name);
-        TextView groupKey = convertView.findViewById(R.id.group_key);
+        TextView groupKey = (TextView)convertView.findViewById(R.id.group_key);
 
         Log.d("getView", ""+position);
         Group group = getItem(position);
