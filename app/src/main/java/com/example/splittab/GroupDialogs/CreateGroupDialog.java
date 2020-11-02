@@ -1,4 +1,4 @@
-package com.example.splittab;
+package com.example.splittab.GroupDialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -9,13 +9,15 @@ import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.splittab.AddPaymentFragment;
 import com.example.splittab.FirebaseTemplates.Group;
+import com.example.splittab.GroupManager;
+import com.example.splittab.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class NewGroupDialog extends DialogFragment {
+public class CreateGroupDialog extends DialogFragment {
     private EditText editText;
 
 
@@ -23,18 +25,18 @@ public class NewGroupDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.new_group_dialog_layout, null);
+        View view = inflater.inflate(R.layout.create_group_dialog_layout, null);
         builder.setView(view).setTitle(R.string.create_group);
 
         editText = (EditText)view.findViewById(R.id.editTextGroupName);
 
-        setOnClickListerners(view);
+        setOnClickListeners(view);
 
         return builder.create();
     }
 
-    private void setOnClickListerners(View v) {
-        v.findViewById(R.id.join_group_button).setOnClickListener(new View.OnClickListener() {
+    private void setOnClickListeners(View v) {
+        v.findViewById(R.id.cancel_group_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -43,13 +45,13 @@ public class NewGroupDialog extends DialogFragment {
         v.findViewById(R.id.create_group_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveGroupToFirebaseAndGroupManager();
+                createGroupAndSaveToFirebase();
                 dismiss();
             }
         });
     }
 
-    private void saveGroupToFirebaseAndGroupManager() {
+    private void createGroupAndSaveToFirebase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -59,7 +61,7 @@ public class NewGroupDialog extends DialogFragment {
 
         database.getReference("groups").child(key).setValue(group);
 
-        database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(group);
+        database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(groupName);
 
         GroupManager groupManager = GroupManager.getInstance();
         groupManager.add(group);

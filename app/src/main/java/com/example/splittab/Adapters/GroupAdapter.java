@@ -33,7 +33,6 @@ public class GroupAdapter extends ArrayAdapter<Group> {
         TextView groupName = (TextView)convertView.findViewById(R.id.group_name);
         TextView groupKey = (TextView)convertView.findViewById(R.id.group_key);
 
-        Log.d("getView", ""+position);
         Group group = getItem(position);
         groupName.setText(group.getName());
         groupKey.setText(groupList.get(position).getKey());

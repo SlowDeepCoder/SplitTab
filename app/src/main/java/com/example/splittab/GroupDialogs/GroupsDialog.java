@@ -1,4 +1,4 @@
-package com.example.splittab;
+package com.example.splittab.GroupDialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,6 +15,8 @@ import android.widget.Toast;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.splittab.Adapters.GroupAdapter;
+import com.example.splittab.GroupManager;
+import com.example.splittab.R;
 
 public class GroupsDialog extends DialogFragment {
     private ListView listView;
@@ -42,17 +44,16 @@ public class GroupsDialog extends DialogFragment {
         view.findViewById(R.id.create_group_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewGroupDialog dialog = new NewGroupDialog();
-                dialog.show(getActivity().getSupportFragmentManager(), "");
+                CreateGroupDialog dialog = new CreateGroupDialog();
+                dialog.show(getActivity().getSupportFragmentManager(), "Create Group");
             }
         });
 
         view.findViewById(R.id.join_group_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ////
-                ////   Not done yet
-                ////
+                JoinGroupDialog dialog = new JoinGroupDialog();
+                dialog.show(getActivity().getSupportFragmentManager(), "Join Group");
             }
         });
 

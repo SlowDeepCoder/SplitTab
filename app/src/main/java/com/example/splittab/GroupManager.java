@@ -2,6 +2,8 @@ package com.example.splittab;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.splittab.FirebaseTemplates.Group;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,25 +46,47 @@ public class GroupManager {
 
     public void loadGroupsFromFireBase() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final ArrayList<String> groupKeyList = new ArrayList<>();
 
-        DatabaseReference reference = database.getReference("users").child(user.getUid()).child("groups");
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference countGroupsReference = database.getReference("users").child(user.getUid()).child("groups");
+        countGroupsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {                  /////
+                        groupKeyList.add(dataSnap.getKey());                                    /////  Hittar alla nycklar som finns hos användaren och lägger i ndem i en lista
+                    }                                                                           /////
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference findGroupReference = database.getReference("groups");
+        findGroupReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     groupList.clear();
-                    for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
-                        Group group = dataSnap.getValue(Group.class);
-                        groupList.add(group);
+                    Log.d("findGroupReference", dataSnapshot.toString());
+                    for (String key : groupKeyList) {
+                        for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
+                            if (key.equals(dataSnap.getKey())) {                               /////
+                                Group group = dataSnap.getValue(Group.class);                  /////  Söker efter varje nyckel och laddar in alal grupepr i en lista
+                                groupList.add(group);                                          /////
+                            }
+                        }
 
                     }
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
