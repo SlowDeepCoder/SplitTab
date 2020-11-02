@@ -58,5 +58,4 @@ public class GroupsDialog extends DialogFragment {
             }
         });
     }
-
 }

@@ -62,7 +62,6 @@ public class AddPaymentFragment extends Fragment {
         monthSpinner.setSelection(monthIndex-1);
         yearSpinner.setSelection(yearIndex-2018);
 
-
         for(Group group: GroupManager.getInstance().getGroupArrayList())
             array.add(group.getName());
 

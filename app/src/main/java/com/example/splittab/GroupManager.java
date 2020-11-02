@@ -43,6 +43,7 @@ public class GroupManager {
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         if(dataSnapshot.exists()) {
+                            groupList.clear();
                             for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                                 Group group = dataSnap.getValue(Group.class);
                                 groupList.add(group);
