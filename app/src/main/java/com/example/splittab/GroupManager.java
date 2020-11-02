@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GroupManager {
     private static final GroupManager GROUP_MANAGER = new GroupManager();
@@ -56,5 +57,16 @@ public class GroupManager {
 
                     }
                 });
+    }
+
+    public static String generateKey(){
+     StringBuilder builder = new StringBuilder();
+     String selection = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+     Random rnd = new Random();
+        for (int i = 0; i < 5; i++) {
+            int index = rnd.nextInt(selection.length());
+            builder.append(selection.charAt(index));
+        }
+     return builder.toString();
     }
 }

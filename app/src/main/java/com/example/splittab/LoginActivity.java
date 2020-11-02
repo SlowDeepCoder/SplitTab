@@ -112,11 +112,14 @@ public class LoginActivity extends AppCompatActivity {
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.exists())
+                if (!snapshot.exists()){
                     reference.child(user.getUid()).setValue(new User(user.getDisplayName(), user.getEmail(), user.getUid()));       // New user
-                else
+                    Log.d("newIntentAndSaveUser", "New user, saving data");
+            }
+                else {
                     GroupManager.getInstance().loadGroupsFromFireBase();        //Old user, load group data
-
+                    Log.d("newIntentAndSaveUser", "Old user, data not saved");
+                }
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

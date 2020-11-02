@@ -55,7 +55,8 @@ public class NewGroupDialog extends DialogFragment {
         DatabaseReference reference = database.getReference("groups");
 
         String groupName = editText.getText().toString().trim();
-        String key = database.getReference("groups").push().getKey();
+//        String key = database.getReference("groups").push().getKey();
+        String key = GroupManager.generateKey();
         Group group = new Group(key, groupName, user.getUid());
 
         reference.child(key).setValue(group);
