@@ -20,11 +20,9 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class AddPaymentFragment extends Fragment {
-    private Spinner daySpinner, monthSpinner, yearSpinner, groupSpinner;
+    private Spinner daySpinner, monthSpinner, yearSpinner;
     private Button addPaymentButton;
     private PaymentManager paymentManager;
-    private ArrayList<String> array = new ArrayList<>();
-    public static ArrayAdapter<String> adapter;
 
 
     @Override
@@ -61,20 +59,12 @@ public class AddPaymentFragment extends Fragment {
         daySpinner.setSelection(dayIndex-1);
         monthSpinner.setSelection(monthIndex-1);
         yearSpinner.setSelection(yearIndex-2018);
-
-        array.clear();
-        for(Group group: GroupManager.getInstance().getGroupArrayList())
-            array.add(group.getName());
-
-        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, array);
-        groupSpinner.setAdapter(adapter);
     }
 
     private void findViewsByTheirId(View view) {
         daySpinner = (Spinner)view.findViewById(R.id.days_spinner);
         monthSpinner = (Spinner)view.findViewById(R.id.months_spinner);
         yearSpinner = (Spinner)view.findViewById(R.id.year_spinner);
-        groupSpinner = (Spinner)view.findViewById(R.id.add_payment_group_spinner);
         addPaymentButton = (Button)view.findViewById(R.id.add_payment_button);
     }
 }

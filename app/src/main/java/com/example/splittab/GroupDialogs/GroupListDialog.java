@@ -1,5 +1,6 @@
 package com.example.splittab.GroupDialogs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -8,11 +9,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.view.menu.ActionMenuItemView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.splittab.Adapters.GroupAdapter;
@@ -59,9 +64,12 @@ public class GroupListDialog extends DialogFragment {
         });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 groupManager.setCurrentGroup(i);
+                ActionMenuItemView item = (ActionMenuItemView)getActivity().findViewById(R.id.actionbarGroup);
+                item.setTitle(groupManager.getCurrentGroup().getName());
                 dismiss();
             }
         });

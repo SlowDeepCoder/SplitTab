@@ -2,7 +2,9 @@ package com.example.splittab;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -110,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Query checkUser = reference.orderByChild("id").equalTo(user.getUid());
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()){
@@ -117,9 +120,10 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("newIntentAndSaveUser", "New user, saving data");
             }
                 else {
-                    GroupManager.getInstance().loadGroupsFromFireBase();        //Old user, load group data
+                    GroupManager.getInstance().loadGroupsFromFireBase(LoginActivity.this);        //Old user, load group data
                     Log.d("newIntentAndSaveUser", "Old user, data not saved");
                 }
+
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();

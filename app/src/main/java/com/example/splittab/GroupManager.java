@@ -1,8 +1,12 @@
 package com.example.splittab;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 
 import com.example.splittab.FirebaseTemplates.Group;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +39,7 @@ public class GroupManager {
     public void add(Group group) {
         groupList.add(group);
 
-        if(currentGroup == null)
+        if (currentGroup == null)
             currentGroup = group;
     }
 
@@ -55,9 +59,7 @@ public class GroupManager {
     }
 
 
-
-
-    public void loadGroupsFromFireBase() {
+    public void loadGroupsFromFireBase(final Activity activity) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final ArrayList<String> groupKeyList = new ArrayList<>();
@@ -89,12 +91,13 @@ public class GroupManager {
                         for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                             if (key.equals(dataSnap.getKey())) {
                                 Group group = dataSnap.getValue(Group.class);
-                                for(DataSnapshot dataSnapP : dataSnap.child("participants").getChildren()){
+                                for (DataSnapshot dataSnapP : dataSnap.child("participants").getChildren()) {
                                     group.addParticipant(dataSnapP.getValue(String.class));
                                 }
                                 groupList.add(group);                                           /////  Söker efter varje nyckel och laddar in alla grupper i en lista
                             }
                         }
+                        setCurrentGroup(0);
 
                     }
                 }

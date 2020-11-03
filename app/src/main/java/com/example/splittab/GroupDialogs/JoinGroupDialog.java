@@ -86,9 +86,6 @@ public class JoinGroupDialog extends DialogFragment {
                             groupManager.add(group);
 
                             GroupListDialog.groupAdapter.notifyDataSetChanged();
-                            AddPaymentFragment.adapter.add(group.getName());
-                            AddPaymentFragment.adapter.notifyDataSetChanged();
-
                             groupsReference.child(key).child("participants").child(user.getUid()).setValue(user.getDisplayName());
                             database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(group.getName());
                             dismiss();
