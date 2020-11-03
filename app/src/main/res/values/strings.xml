@@ -50,4 +50,5 @@
     <string name="enter_description_to_add_payment">Enter a description to add payment</string>
     <string name="saved_payment">Saved payment</string>
     <string name="no_group_selected">No group selected</string>
+    <string name="feedback">Feedback</string>
 </resources>
