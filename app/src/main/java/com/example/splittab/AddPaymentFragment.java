@@ -4,9 +4,13 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -17,16 +21,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class AddPaymentFragment extends Fragment {
-    private Spinner daySpinner, monthSpinner, yearSpinner;
-    private EditText amountEditText, descriptionEditText;
-    private Button addPaymentButton;
-    private GroupManager groupManager;
 
+    private Spinner daySpinner, monthSpinner, yearSpinner;
+    private EditText amountEditText, descriptionEditText, itemDescriptioEeditText ;
+    private Button addPaymentButton;
+
+    private GroupManager paymentManager;
+    private ArrayList<Payment> paymentArrayList;
+    private ArrayAdapter<Payment> paymentAdapter;
+    private ListView paymentListView;
+    private GroupManager groupManager;
 
 
     @Override
@@ -37,6 +48,14 @@ public class AddPaymentFragment extends Fragment {
         findViewsByTheirId(view);
         setOnClickListeners();
         setSpinners();
+        paymentArrayList = new ArrayList<>();
+        itemDescriptioEeditText = (EditText)view.findViewById(R.id.editTextDescription);
+        amountEditText = (EditText)view.findViewById(R.id.editTextAmount);
+        //Adapter
+        paymentAdapter = new ArrayAdapter<Payment>(getContext(), android.R.layout.simple_list_item_1, paymentArrayList);
+        //Connect paymentAdapter to ListView
+        paymentListView = view.findViewById(R.id.lastPaymentListView);
+        paymentListView.setAdapter(paymentAdapter);
 
         return view;
     }
@@ -45,6 +64,10 @@ public class AddPaymentFragment extends Fragment {
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                //paymentManager.addPayment(new Payment(day,month,year,amount, itemDescription));
+
                 if (groupManager.getCurrentGroup() == null){
                     Toast.makeText(getContext(), getResources().getString(R.string.no_group_selected), Toast.LENGTH_SHORT).show();
                     return;
@@ -69,6 +92,7 @@ public class AddPaymentFragment extends Fragment {
                     String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
                     Payment payment = new Payment(day, month, year, amount, description, userUID);
+                    paymentAdapter.add(payment);
 
                     groupManager.getCurrentGroup().createPaymentAndSaveToFireBase(payment, getContext());
 
