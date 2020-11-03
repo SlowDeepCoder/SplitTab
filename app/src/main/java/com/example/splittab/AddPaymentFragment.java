@@ -22,14 +22,14 @@ import java.util.TimeZone;
 public class AddPaymentFragment extends Fragment {
     private Spinner daySpinner, monthSpinner, yearSpinner;
     private Button addPaymentButton;
-    private PaymentManager paymentManager;
+    private GroupManager groupManager;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_payment_layout, container, false);
 
-        paymentManager = PaymentManager.getInstance();
+        groupManager = GroupManager.getInstance();
         findViewsByTheirId(view);
         setOnClickListeners();
         setSpinners();
@@ -41,7 +41,7 @@ public class AddPaymentFragment extends Fragment {
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                paymentManager.addPayment(new Payment());
+                groupManager.addPaymentToCurrentGroup(new Payment());
             }
         });
     }

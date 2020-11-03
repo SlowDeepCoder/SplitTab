@@ -69,7 +69,7 @@ public class CreateGroupDialog extends DialogFragment {
 
         group.addParticipant(user.getDisplayName());
         GroupManager groupManager = GroupManager.getInstance();
-        groupManager.add(group);
+        groupManager.addGroup(group);
 
         GroupListDialog.groupAdapter.notifyDataSetChanged();
         dismiss();

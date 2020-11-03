@@ -82,7 +82,7 @@ public class JoinGroupDialog extends DialogFragment {
                             for (DataSnapshot dataSnapP : dataSnap.child("participants").getChildren()) {
                                 group.addParticipant(dataSnapP.getValue(String.class));
                             }
-                            groupManager.add(group);
+                            groupManager.addGroup(group);
 
                             GroupListDialog.groupAdapter.notifyDataSetChanged();
                             groupsReference.child(key).child("participants").child(user.getUid()).setValue(user.getDisplayName());

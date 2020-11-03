@@ -1,5 +1,7 @@
 package com.example.splittab.FirebaseTemplates;
 
+import com.example.splittab.Payment;
+
 import java.util.ArrayList;
 
 public class Group {
@@ -7,6 +9,7 @@ public class Group {
     private String name;
     private String creator;
     private ArrayList<String> participants = new ArrayList<>();
+    private ArrayList<Payment> payments = new ArrayList<>();
 
     public Group(String key, String name, String creator) {
         this.key = key;
@@ -46,5 +49,13 @@ public class Group {
 
     public ArrayList<String> getParticipantList(){
         return participants;
+    }
+
+    public void addPayment(Payment payment){
+        payments.add(payment);
+    }
+
+    public ArrayList<Payment> getPaymentList(){
+        return payments;
     }
 }

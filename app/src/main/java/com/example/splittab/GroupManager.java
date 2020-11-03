@@ -36,11 +36,17 @@ public class GroupManager {
         return groupList;
     }
 
-    public void add(Group group) {
+    public void addGroup(Group group) {
         groupList.add(group);
 
         if (currentGroup == null)
             currentGroup = group;
+    }
+
+
+    public void addPaymentToCurrentGroup(Payment payment){
+        if(currentGroup!=null)
+        currentGroup.addPayment(payment);
     }
 
     public Group getCurrentGroup() {
@@ -57,6 +63,7 @@ public class GroupManager {
             Log.d("setCurrentGroup", "currentGroup satt till " + currentGroup.getName());
         }
     }
+
 
 
     public void loadGroupsFromFireBase(final Activity activity) {
