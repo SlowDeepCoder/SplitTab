@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.splittab.GroupDialogs.GroupListDialog;
+import com.example.splittab.Dialogs.GroupListDialog;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
@@ -16,11 +16,8 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.splittab.ui.main.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;

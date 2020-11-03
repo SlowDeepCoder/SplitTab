@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(LoginActivity.this, signInOptions);
     }
 
-    private void signIn() {
+    public void signInWithGoogleButton(View view) {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -94,9 +94,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void signInWithGoogleButton(View view) {
-        signIn();
-    }
+
 
     @Override
     public void onStart() {

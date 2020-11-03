@@ -1,4 +1,4 @@
-package com.example.splittab.GroupDialogs;
+package com.example.splittab.Dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.splittab.AddPaymentFragment;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
@@ -34,7 +33,7 @@ public class JoinGroupDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.join_group_dialog_layout, null);
         builder.setView(view).setTitle(R.string.join_group);
 
-        editText = (EditText) view.findViewById(R.id.editTextJoinGroup);
+        editText = (EditText) view.findViewById(R.id.editTextJEnterFeedback);
 
         setOnClickListeners(view);
 
@@ -48,7 +47,7 @@ public class JoinGroupDialog extends DialogFragment {
                 dismiss();
             }
         });
-        v.findViewById(R.id.join_group_button).setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.leave_feedback_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String key = editText.getText().toString().trim();
@@ -83,7 +82,7 @@ public class JoinGroupDialog extends DialogFragment {
                             for (DataSnapshot dataSnapP : dataSnap.child("participants").getChildren()) {
                                 group.addParticipant(dataSnapP.getValue(String.class));
                             }
-                            groupManager.add(group);
+                            groupManager.addGroup(group);
 
                             GroupListDialog.groupAdapter.notifyDataSetChanged();
                             groupsReference.child(key).child("participants").child(user.getUid()).setValue(user.getDisplayName());

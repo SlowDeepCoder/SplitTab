@@ -1,4 +1,4 @@
-package com.example.splittab.GroupDialogs;
+package com.example.splittab.Dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.splittab.AddPaymentFragment;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
@@ -70,7 +69,7 @@ public class CreateGroupDialog extends DialogFragment {
 
         group.addParticipant(user.getDisplayName());
         GroupManager groupManager = GroupManager.getInstance();
-        groupManager.add(group);
+        groupManager.addGroup(group);
 
         GroupListDialog.groupAdapter.notifyDataSetChanged();
         dismiss();

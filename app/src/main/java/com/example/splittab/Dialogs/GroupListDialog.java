@@ -1,4 +1,4 @@
-package com.example.splittab.GroupDialogs;
+package com.example.splittab.Dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -7,17 +7,13 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.view.menu.ActionMenuItemView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.splittab.Adapters.GroupAdapter;
@@ -55,7 +51,7 @@ public class GroupListDialog extends DialogFragment {
             }
         });
 
-        view.findViewById(R.id.join_group_button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.leave_feedback_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 JoinGroupDialog dialog = new JoinGroupDialog();
