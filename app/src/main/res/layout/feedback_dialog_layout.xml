@@ -8,7 +8,7 @@
 
 
     <Button
-        android:id="@+id/cancel_join_button"
+        android:id="@+id/cancel_feedback_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
@@ -20,20 +20,20 @@
         android:id="@+id/leave_feedback_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/join_group"
+        android:text="@string/leave_feedback"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cancel_join_button" />
+        app:layout_constraintStart_toEndOf="@+id/cancel_feedback_button" />
 
     <EditText
-        android:id="@+id/editTextJEnterFeedback"
-        android:layout_width="wrap_content"
+        android:id="@+id/editTextEnterFeedback"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:ems="10"
+        android:hint="@string/enter_feedback"
         android:inputType="textPersonName"
-        android:hint="@string/group_id"
-        app:layout_constraintBottom_toTopOf="@+id/cancel_join_button"
+        app:layout_constraintBottom_toTopOf="@+id/cancel_feedback_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
