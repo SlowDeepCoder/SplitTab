@@ -44,4 +44,6 @@
     <string name="leave_feedback">Leave Feedback</string>
     <string name="enter_feedback">Enter Feedback</string>
     <string name="thank_you_feedback">Thank you for your feedback!</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
 </resources>
