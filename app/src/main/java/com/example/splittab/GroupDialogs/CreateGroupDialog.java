@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -28,7 +29,7 @@ public class CreateGroupDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.create_group_dialog_layout, null);
         builder.setView(view).setTitle(R.string.create_group);
 
-        editText = (EditText)view.findViewById(R.id.editTextGroupName);
+        editText = (EditText) view.findViewById(R.id.editTextGroupName);
 
         setOnClickListeners(view);
 
@@ -46,7 +47,6 @@ public class CreateGroupDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 createGroupAndSaveToFirebase();
-                dismiss();
             }
         });
     }
@@ -56,6 +56,11 @@ public class CreateGroupDialog extends DialogFragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         String groupName = editText.getText().toString().trim();
+        if (groupName.length() < 1) {
+            Toast.makeText(getContext(), getResources().getString(R.string.enter_name_to_create_group), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String key = GroupManager.generateKey();
         Group group = new Group(key, groupName, user.getUid());
 
@@ -63,11 +68,11 @@ public class CreateGroupDialog extends DialogFragment {
         database.getReference("groups").child(key).child("participants").child(user.getUid()).setValue(user.getDisplayName());
         database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(groupName);
 
-
         group.addParticipant(user.getDisplayName());
         GroupManager groupManager = GroupManager.getInstance();
         groupManager.add(group);
 
         GroupListDialog.groupAdapter.notifyDataSetChanged();
+        dismiss();
     }
 }

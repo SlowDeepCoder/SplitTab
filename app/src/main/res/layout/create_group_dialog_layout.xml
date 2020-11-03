@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:ems="10"
+        style="text-transform: capitalize"
         android:inputType="textPersonName"
         android:hint="@string/group_name"
         app:layout_constraintBottom_toTopOf="@+id/cancel_group_button"

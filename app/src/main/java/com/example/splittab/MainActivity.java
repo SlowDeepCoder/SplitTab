@@ -52,16 +52,14 @@ public class MainActivity extends AppCompatActivity {
                         GroupListDialog dialog = new GroupListDialog();
                         dialog.show(MainActivity.this.getSupportFragmentManager(), "");
                         return true;
-
                     case R.id.actionbarSettings:
-                        ////
-                        ////   Not done yet
-                        ////
+                        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(settingsIntent);
                         return true;
                     case R.id.actionbarSignOut:
                         FirebaseAuth.getInstance().signOut();
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
+                        Intent LoginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(LoginIntent);
                         finish();
                         return true;
 
@@ -70,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     @SuppressLint("RestrictedApi")
     @Nullable

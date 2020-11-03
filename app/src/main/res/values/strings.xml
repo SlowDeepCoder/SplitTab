@@ -39,4 +39,6 @@
     <string name="enter_5_char">Enter a 5 character code</string>
     <string name="that_ID_doesnt_exist">That ID doesn\'t exist</string>
     <string name="already_in_group">You are already in that group</string>
+    <string name="enter_name_to_create_group">Enter a name to create a group</string>
+    <string name="settings">Settings</string>
 </resources>
