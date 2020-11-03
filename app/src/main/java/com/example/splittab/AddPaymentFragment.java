@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class AddPaymentFragment extends Fragment {
-
     private Spinner daySpinner, monthSpinner, yearSpinner;
     private EditText amountEditText, descriptionEditText;
     private Button addPaymentButton;
@@ -50,6 +49,7 @@ public class AddPaymentFragment extends Fragment {
         paymentArrayList = new ArrayList<>();
         amountEditText = (EditText)view.findViewById(R.id.editTextAmount);
         //Adapter
+
         paymentAdapter = new ArrayAdapter<Payment>(getContext(), android.R.layout.simple_list_item_1, paymentArrayList);
         //Connect paymentAdapter to ListView
         paymentListView = view.findViewById(R.id.lastPaymentListView);
@@ -79,14 +79,15 @@ public class AddPaymentFragment extends Fragment {
                 }
 
                 if (groupManager.getCurrentGroup() != null) {
-                    int day = daySpinner.getSelectedItemPosition();
-                    int month = monthSpinner.getSelectedItemPosition();
+                    int day = daySpinner.getSelectedItemPosition()+1;
+                    int month = monthSpinner.getSelectedItemPosition()+1;
                     int year = yearSpinner.getSelectedItemPosition()+2018;
                     int amount = Integer.parseInt(amountEditText.getText().toString().trim());
                     String description = descriptionEditText.getText().toString().trim();
                     String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-                    Payment payment = new Payment(day, month, year, amount, description, userUID);
+                    Payment payment = new Payment(day, month, year, amount, description, userUID, userName);
                     paymentAdapter.add(payment);
 
                     groupManager.getCurrentGroup().createPaymentAndSaveToFireBase(payment, getContext());

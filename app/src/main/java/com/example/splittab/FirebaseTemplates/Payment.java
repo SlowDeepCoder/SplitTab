@@ -4,16 +4,17 @@ public class Payment {
     private int day, month, year;
     private int amount;
     private String description;
-    private String user;
+    private String userName, userUID;
     private String key;
 
-    public Payment(int day, int month, int year, int amount, String description, String user) {
+    public Payment(int day, int month, int year, int amount, String description, String userUID, String userName) {
         this.day = day;
         this.month = month;
         this.year = year;
         this.amount = amount;
         this.description = description;
-        this.user = user;
+        this.userUID = userUID;
+        this.userName = userName;
     }
 
     public Payment(){}
@@ -58,12 +59,12 @@ public class Payment {
         this.description = description;
     }
 
-    public String getUser() {
-        return user;
+    public String getUserUID() {
+        return userUID;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserUID(String userUID) {
+        this.userUID = userUID;
     }
 
     public String getKey() {
@@ -72,5 +73,13 @@ public class Payment {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
