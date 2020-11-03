@@ -29,11 +29,9 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class AddPaymentFragment extends Fragment {
-
     private Spinner daySpinner, monthSpinner, yearSpinner;
-    private EditText amountEditText, descriptionEditText, itemDescriptioEeditText ;
+    private EditText amountEditText, descriptionEditText;
     private Button addPaymentButton;
-
     private GroupManager paymentManager;
     public static PaymentAdapter paymentAdapter;
     private ListView paymentListView;
@@ -48,14 +46,12 @@ public class AddPaymentFragment extends Fragment {
         findViewsByTheirId(view);
         setOnClickListeners();
         setSpinners();
-        itemDescriptioEeditText = (EditText)view.findViewById(R.id.editTextDescription);
-        amountEditText = (EditText)view.findViewById(R.id.editTextAmount);
         //Adapter
         paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
+
         //Connect paymentAdapter to ListView
         paymentListView = view.findViewById(R.id.lastPaymentListView);
         paymentListView.setAdapter(paymentAdapter);
-
         return view;
     }
 
@@ -63,8 +59,6 @@ public class AddPaymentFragment extends Fragment {
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 //paymentManager.addPayment(new Payment(day,month,year,amount, itemDescription));
 
                 if (groupManager.getCurrentGroup() == null){
@@ -83,14 +77,15 @@ public class AddPaymentFragment extends Fragment {
                 }
 
                 if (groupManager.getCurrentGroup() != null) {
-                    int day = daySpinner.getSelectedItemPosition();
-                    int month = monthSpinner.getSelectedItemPosition();
+                    int day = daySpinner.getSelectedItemPosition()+1;
+                    int month = monthSpinner.getSelectedItemPosition()+1;
                     int year = yearSpinner.getSelectedItemPosition()+2018;
                     int amount = Integer.parseInt(amountEditText.getText().toString().trim());
                     String description = descriptionEditText.getText().toString().trim();
                     String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-                    Payment payment = new Payment(day, month, year, amount, description, userUID);
+                    Payment payment = new Payment(day, month, year, amount, description, userUID, userName);
                     paymentAdapter.add(payment);
 
                     groupManager.getCurrentGroup().createPaymentAndSaveToFireBase(payment, getContext());
