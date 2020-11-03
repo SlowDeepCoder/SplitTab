@@ -44,10 +44,6 @@ public class GroupManager {
     }
 
 
-    public void addPaymentToCurrentGroup(Payment payment){
-        if(currentGroup!=null)
-        currentGroup.addPayment(payment);
-    }
 
     public Group getCurrentGroup() {
         return currentGroup;

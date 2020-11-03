@@ -46,4 +46,8 @@
     <string name="thank_you_feedback">Thank you for your feedback!</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_with_twitter">Sign in with Twitter</string>
+    <string name="enter_amount_to_add_payment">Enter an amount to add payment</string>
+    <string name="enter_description_to_add_payment">Enter a description to add payment</string>
+    <string name="saved_payment">Saved payment</string>
+    <string name="no_group_selected">No group selected</string>
 </resources>

@@ -8,7 +8,7 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/editTextAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/editTextDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -41,7 +41,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextAmount" />
 
     <Spinner
         android:id="@+id/days_spinner"
@@ -51,7 +51,7 @@
         android:entries="@array/days"
         app:layout_constraintEnd_toStartOf="@+id/months_spinner"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
 
     <Spinner
         android:id="@+id/months_spinner"
@@ -61,7 +61,7 @@
         android:entries="@array/months"
         app:layout_constraintEnd_toStartOf="@+id/year_spinner"
         app:layout_constraintStart_toEndOf="@+id/days_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
 
     <Spinner
         android:id="@+id/year_spinner"
@@ -71,7 +71,7 @@
         android:entries="@array/year"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/months_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
 
     <Button
         android:id="@+id/add_payment_button"
