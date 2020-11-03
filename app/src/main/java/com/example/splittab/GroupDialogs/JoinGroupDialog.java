@@ -55,11 +55,9 @@ public class JoinGroupDialog extends DialogFragment {
                 if (key.length() != 5) {
                     Toast.makeText(getContext(), getResources().getString(R.string.enter_5_char), Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if(checkIfInGroup(key)){
+                } else if (checkIfInGroup(key)) {
                     Toast.makeText(getContext(), getResources().getString(R.string.already_in_group), Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     joinGroupAndSaveToFireBase(key);
                 }
             }
@@ -80,6 +78,11 @@ public class JoinGroupDialog extends DialogFragment {
                         if (key.equals(dataSnap.getKey())) {
                             GroupManager groupManager = GroupManager.getInstance();
                             Group group = dataSnap.getValue(Group.class);
+                            group.addParticipant(user.getDisplayName());
+
+                            for (DataSnapshot dataSnapP : dataSnap.child("participants").getChildren()) {
+                                group.addParticipant(dataSnapP.getValue(String.class));
+                            }
                             groupManager.add(group);
 
                             GroupListDialog.groupAdapter.notifyDataSetChanged();
@@ -103,10 +106,10 @@ public class JoinGroupDialog extends DialogFragment {
         });
     }
 
-    private boolean checkIfInGroup(String key){
+    private boolean checkIfInGroup(String key) {
         GroupManager groupManager = GroupManager.getInstance();
-        for (Group group : groupManager.getGroupArrayList()){
-            if(key.equals(group.getKey()))
+        for (Group group : groupManager.getGroupArrayList()) {
+            if (key.equals(group.getKey()))
                 return true;
         }
         return false;

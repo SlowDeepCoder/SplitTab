@@ -56,13 +56,15 @@ public class CreateGroupDialog extends DialogFragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         String groupName = editText.getText().toString().trim();
-        String key = GroupManager.generateKey();                                 // String key = database.getReference("groups").push().getKey();
+        String key = GroupManager.generateKey();
         Group group = new Group(key, groupName, user.getUid());
 
         database.getReference("groups").child(key).setValue(group);
-
+        database.getReference("groups").child(key).child("participants").child(user.getUid()).setValue(user.getDisplayName());
         database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(groupName);
 
+
+        group.addParticipant(user.getDisplayName());
         GroupManager groupManager = GroupManager.getInstance();
         groupManager.add(group);
 

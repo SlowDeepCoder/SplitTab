@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +34,7 @@ public class GroupListDialog extends DialogFragment {
 
         groupManager = GroupManager.getInstance();
         groupAdapter = new GroupAdapter(view.getContext(), R.layout.group_list_item, groupManager.getGroupArrayList());
-        listView = (ListView)view.findViewById(R.id.groupsDialogListView);
+        listView = (ListView) view.findViewById(R.id.groupsDialogListView);
         listView.setAdapter(groupAdapter);
 
         setOnClickListeners(view);

@@ -32,10 +32,19 @@ public class GroupAdapter extends ArrayAdapter<Group> {
 
         TextView groupName = (TextView)convertView.findViewById(R.id.group_name);
         TextView groupKey = (TextView)convertView.findViewById(R.id.group_key);
+        TextView groupParticipants = (TextView)convertView.findViewById(R.id.group_participants);
 
         Group group = getItem(position);
         groupName.setText(group.getName());
         groupKey.setText(groupList.get(position).getKey());
+
+        StringBuilder builder = new StringBuilder();
+        for(String s : group.getParticipantList()){
+            builder.append(s);
+            builder.append(", ");
+        }
+        builder.deleteCharAt(builder.lastIndexOf(","));
+        groupParticipants.setText(builder.toString());
 
         return convertView;
     }

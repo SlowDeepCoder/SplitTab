@@ -79,17 +79,20 @@ public class GroupManager {
             }
         });
 
-        DatabaseReference findGroupReference = database.getReference("groups");
-        findGroupReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference groupReference = database.getReference("groups");
+        groupReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     groupList.clear();
                     for (String key : groupKeyList) {
                         for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
-                            if (key.equals(dataSnap.getKey())) {                               /////
-                                Group group = dataSnap.getValue(Group.class);                  /////  Söker efter varje nyckel och laddar in alla grupper i en lista
-                                groupList.add(group);                                          /////
+                            if (key.equals(dataSnap.getKey())) {
+                                Group group = dataSnap.getValue(Group.class);
+                                for(DataSnapshot dataSnapP : dataSnap.child("participants").getChildren()){
+                                    group.addParticipant(dataSnapP.getValue(String.class));
+                                }
+                                groupList.add(group);                                           /////  Söker efter varje nyckel och laddar in alla grupper i en lista
                             }
                         }
 

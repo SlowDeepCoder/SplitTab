@@ -6,7 +6,7 @@ public class Group {
     private String key;
     private String name;
     private String creator;
-    private ArrayList<String> userList = new ArrayList<>();
+    private ArrayList<String> participants = new ArrayList<>();
 
     public Group(String key, String name, String creator) {
         this.key = key;
@@ -40,11 +40,11 @@ public class Group {
         this.creator = participants;
     }
 
-    public void addUser(String userUID){
-        userList.add(userUID);
+    public void addParticipant(String userUID){
+        participants.add(userUID);
     }
 
-    public ArrayList<String> getUsers(){
-        return userList;
+    public ArrayList<String> getParticipantList(){
+        return participants;
     }
 }
