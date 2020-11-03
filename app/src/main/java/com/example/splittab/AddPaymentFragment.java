@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.splittab.Adapters.PaymentAdapter;
 import com.example.splittab.FirebaseTemplates.Payment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,8 +35,7 @@ public class AddPaymentFragment extends Fragment {
     private Button addPaymentButton;
 
     private GroupManager paymentManager;
-    private ArrayList<Payment> paymentArrayList;
-    private ArrayAdapter<Payment> paymentAdapter;
+    public static PaymentAdapter paymentAdapter;
     private ListView paymentListView;
     private GroupManager groupManager;
 
@@ -48,11 +48,10 @@ public class AddPaymentFragment extends Fragment {
         findViewsByTheirId(view);
         setOnClickListeners();
         setSpinners();
-        paymentArrayList = new ArrayList<>();
         itemDescriptioEeditText = (EditText)view.findViewById(R.id.editTextDescription);
         amountEditText = (EditText)view.findViewById(R.id.editTextAmount);
         //Adapter
-        paymentAdapter = new ArrayAdapter<Payment>(getContext(), android.R.layout.simple_list_item_1, paymentArrayList);
+        paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
         //Connect paymentAdapter to ListView
         paymentListView = view.findViewById(R.id.lastPaymentListView);
         paymentListView.setAdapter(paymentAdapter);
