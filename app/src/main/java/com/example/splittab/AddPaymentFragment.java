@@ -30,9 +30,8 @@ import java.util.TimeZone;
 public class AddPaymentFragment extends Fragment {
 
     private Spinner daySpinner, monthSpinner, yearSpinner;
-    private EditText amountEditText, descriptionEditText, itemDescriptioEeditText ;
+    private EditText amountEditText, descriptionEditText;
     private Button addPaymentButton;
-
     private GroupManager paymentManager;
     private ArrayList<Payment> paymentArrayList;
     private ArrayAdapter<Payment> paymentAdapter;
@@ -49,14 +48,12 @@ public class AddPaymentFragment extends Fragment {
         setOnClickListeners();
         setSpinners();
         paymentArrayList = new ArrayList<>();
-        itemDescriptioEeditText = (EditText)view.findViewById(R.id.editTextDescription);
         amountEditText = (EditText)view.findViewById(R.id.editTextAmount);
         //Adapter
         paymentAdapter = new ArrayAdapter<Payment>(getContext(), android.R.layout.simple_list_item_1, paymentArrayList);
         //Connect paymentAdapter to ListView
         paymentListView = view.findViewById(R.id.lastPaymentListView);
         paymentListView.setAdapter(paymentAdapter);
-
         return view;
     }
 
@@ -64,8 +61,6 @@ public class AddPaymentFragment extends Fragment {
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 //paymentManager.addPayment(new Payment(day,month,year,amount, itemDescription));
 
                 if (groupManager.getCurrentGroup() == null){
