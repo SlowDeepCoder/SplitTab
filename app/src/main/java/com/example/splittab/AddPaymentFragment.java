@@ -34,7 +34,7 @@ public class AddPaymentFragment extends Fragment {
     private Button addPaymentButton;
     private GroupManager paymentManager;
     public static PaymentAdapter paymentAdapter;
-    private ListView paymentListView;
+    public static ListView paymentListView;
     private GroupManager groupManager;
 
 
@@ -50,7 +50,6 @@ public class AddPaymentFragment extends Fragment {
         paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
 
         //Connect paymentAdapter to ListView
-        paymentListView = view.findViewById(R.id.lastPaymentListView);
         paymentListView.setAdapter(paymentAdapter);
         return view;
     }
@@ -86,13 +85,14 @@ public class AddPaymentFragment extends Fragment {
                     String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
                     Payment payment = new Payment(day, month, year, amount, description, userUID, userName);
-                    paymentAdapter.add(payment);
+//                    paymentAdapter.add(payment);
 
                     groupManager.getCurrentGroup().createPaymentAndSaveToFireBase(payment, getContext());
 
                     amountEditText.setText("");
                     descriptionEditText.setText("");
                     Toast.makeText(getContext(), getResources().getString(R.string.saved_payment), Toast.LENGTH_SHORT).show();
+                    paymentAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -121,5 +121,6 @@ public class AddPaymentFragment extends Fragment {
         amountEditText.setInputType(InputType.TYPE_CLASS_NUMBER);   //Siffertagentbord
         descriptionEditText = (EditText) view.findViewById(R.id.editTextDescription);
         addPaymentButton = (Button) view.findViewById(R.id.add_payment_button);
+        paymentListView = view.findViewById(R.id.lastPaymentListView);
     }
 }

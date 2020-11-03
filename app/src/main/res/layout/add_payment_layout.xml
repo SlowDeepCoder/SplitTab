@@ -20,16 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginTop="32dp"
-        android:entries="@array/currencies"
-        android:gravity="center_horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/editTextDescription"
         android:layout_width="0dp"
@@ -47,7 +37,7 @@
         android:id="@+id/days_spinner"
         android:layout_width="wrap_content"
         android:layout_height="43dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:entries="@array/days"
         app:layout_constraintEnd_toStartOf="@+id/months_spinner"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +47,7 @@
         android:id="@+id/months_spinner"
         android:layout_width="wrap_content"
         android:layout_height="43dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:entries="@array/months"
         app:layout_constraintEnd_toStartOf="@+id/year_spinner"
         app:layout_constraintStart_toEndOf="@+id/days_spinner"
@@ -67,7 +57,7 @@
         android:id="@+id/year_spinner"
         android:layout_width="wrap_content"
         android:layout_height="43dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:entries="@array/year"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/months_spinner"
@@ -77,7 +67,7 @@
         android:id="@+id/add_payment_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="50dp"
         android:text="@string/add_payment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,8 +75,10 @@
 
     <ListView
         android:id="@+id/lastPaymentListView"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/add_payment_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

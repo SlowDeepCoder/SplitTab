@@ -17,6 +17,9 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.splittab.Adapters.GroupAdapter;
+import com.example.splittab.Adapters.PaymentAdapter;
+import com.example.splittab.AddPaymentFragment;
+import com.example.splittab.FirebaseTemplates.Payment;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
 
@@ -51,7 +54,7 @@ public class GroupListDialog extends DialogFragment {
             }
         });
 
-        view.findViewById(R.id.leave_feedback_button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.join_group_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 JoinGroupDialog dialog = new JoinGroupDialog();
@@ -64,8 +67,14 @@ public class GroupListDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 groupManager.setCurrentGroup(i);
+                AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
                 ActionMenuItemView item = (ActionMenuItemView)getActivity().findViewById(R.id.actionbarGroup);
                 item.setTitle(groupManager.getCurrentGroup().getName());
+
+                AddPaymentFragment.paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
+                AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
+                AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
+
                 dismiss();
             }
         });

@@ -28,12 +28,15 @@ public class PaymentAdapter extends ArrayAdapter<Payment> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.payment_list_item, parent, false);
 
         TextView paymentName = (TextView)convertView.findViewById(R.id.payment_name_textview);
-        TextView paymentSum = (TextView)convertView.findViewById(R.id.payment_sum_textview);
+        TextView paymentAmount = (TextView)convertView.findViewById(R.id.payment_sum_textview);
         TextView paymentDate = (TextView)convertView.findViewById(R.id.payment_date_textview);
+        TextView paymentDescription = (TextView)convertView.findViewById(R.id.payment_description_textview);
 
         Payment payment = getItem(position);
-        paymentName.setText(paymentList.get(position).getUser());
-        paymentSum.setText(String.valueOf(paymentList.get(position).getAmount()));
+        paymentName.setText(paymentList.get(position).getUserName());
+        String amount = String.valueOf(paymentList.get(position).getAmount()) + " kr";
+        paymentAmount.setText(amount);
+        paymentDescription.setText(paymentList.get(position).getDescription());
 
         StringBuilder builder = new StringBuilder();
         builder.append(paymentList.get(position).getDay());
