@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 
 import com.example.splittab.FirebaseTemplates.Group;
+import com.example.splittab.FirebaseTemplates.Payment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,7 +45,6 @@ public class GroupManager {
     }
 
 
-
     public Group getCurrentGroup() {
         return currentGroup;
     }
@@ -59,7 +59,6 @@ public class GroupManager {
             Log.d("setCurrentGroup", "currentGroup satt till " + currentGroup.getName());
         }
     }
-
 
 
     public void loadGroupsFromFireBase(final Activity activity) {
@@ -94,10 +93,13 @@ public class GroupManager {
                         for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                             if (key.equals(dataSnap.getKey())) {
                                 Group group = dataSnap.getValue(Group.class);
-                                for (DataSnapshot dataSnapP : dataSnap.child("participants").getChildren()) {
-                                    group.addParticipant(dataSnapP.getValue(String.class));
+                                for (DataSnapshot dataSnap2 : dataSnap.child("participants").getChildren()) {
+                                    group.addParticipant(dataSnap2.getValue(String.class));
                                 }
-                                groupList.add(group);                                           /////  Söker efter varje nyckel och laddar in alla grupper i en lista
+                                for (DataSnapshot dataSnap3 : dataSnap.child("payments").getChildren()) {
+                                    group.addPayment(dataSnap3.getValue(Payment.class));
+                                }
+                                groupList.add(group);                          /////  Söker efter varje nyckel och laddar in alla grupper i en lista
                             }
                         }
                         setCurrentGroup(0);

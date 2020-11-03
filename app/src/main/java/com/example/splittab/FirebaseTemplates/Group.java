@@ -63,6 +63,8 @@ public class Group {
         return paymentList;
     }
 
+    public void addPayment(Payment payment){paymentList.add(payment);}
+
     public void createPaymentAndSaveToFireBase(Payment payment, Context context){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
