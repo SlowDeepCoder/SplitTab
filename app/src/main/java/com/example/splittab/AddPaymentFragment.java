@@ -4,25 +4,33 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
-
-import com.example.splittab.FirebaseTemplates.Group;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class AddPaymentFragment extends Fragment {
+
     private Spinner daySpinner, monthSpinner, yearSpinner;
     private Button addPaymentButton;
     private PaymentManager paymentManager;
+    private EditText itemDescriptioEeditText, amountEditText;
+    private ArrayList<Payment> paymentArrayList;
+    private ArrayAdapter<Payment> paymentAdapter;
+    private ListView paymentListView;
+
 
 
     @Override
@@ -33,6 +41,14 @@ public class AddPaymentFragment extends Fragment {
         findViewsByTheirId(view);
         setOnClickListeners();
         setSpinners();
+        paymentArrayList = new ArrayList<>();
+        itemDescriptioEeditText = (EditText)view.findViewById(R.id.editTextTextPersonName2);
+        amountEditText = (EditText)view.findViewById(R.id.editTextTextPersonName);
+        //Adapter
+        paymentAdapter = new ArrayAdapter<Payment>(getContext(), android.R.layout.simple_list_item_1, paymentArrayList);
+        //Connect paymentAdapter to ListView
+        paymentListView = view.findViewById(R.id.lastPaymentListView);
+        paymentListView.setAdapter(paymentAdapter);
 
         return view;
     }
@@ -41,7 +57,13 @@ public class AddPaymentFragment extends Fragment {
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                paymentManager.addPayment(new Payment());
+                String itemDescription = itemDescriptioEeditText.getText().toString();
+                int amount = Integer.parseInt(amountEditText.getText().toString());
+                int day = Integer.parseInt(daySpinner.getSelectedItem().toString());
+                String month = monthSpinner.getSelectedItem().toString();
+                int year = Integer.parseInt(yearSpinner.getSelectedItem().toString());
+                paymentAdapter.add(new Payment(day,month,year,amount, itemDescription));
+                //paymentManager.addPayment(new Payment(day,month,year,amount, itemDescription));
             }
         });
     }
