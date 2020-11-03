@@ -67,7 +67,6 @@ public class GroupListDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 groupManager.setCurrentGroup(i);
-                AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
                 ActionMenuItemView item = (ActionMenuItemView)getActivity().findViewById(R.id.actionbarGroup);
                 item.setTitle(groupManager.getCurrentGroup().getName());
 

@@ -46,11 +46,14 @@ public class AddPaymentFragment extends Fragment {
         findViewsByTheirId(view);
         setOnClickListeners();
         setSpinners();
-        //Adapter
-        paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
 
-        //Connect paymentAdapter to ListView
-        paymentListView.setAdapter(paymentAdapter);
+        if (groupManager.getCurrentGroup() != null) {
+            //Adapter
+            paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
+
+            //Connect paymentAdapter to ListView
+            paymentListView.setAdapter(paymentAdapter);
+        }
         return view;
     }
 
@@ -60,25 +63,25 @@ public class AddPaymentFragment extends Fragment {
             public void onClick(View view) {
                 //paymentManager.addPayment(new Payment(day,month,year,amount, itemDescription));
 
-                if (groupManager.getCurrentGroup() == null){
+                if (groupManager.getCurrentGroup() == null) {
                     Toast.makeText(getContext(), getResources().getString(R.string.no_group_selected), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (amountEditText.getText().toString().length() < 1){
+                if (amountEditText.getText().toString().length() < 1) {
                     Toast.makeText(getContext(), getResources().getString(R.string.enter_amount_to_add_payment), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (descriptionEditText.getText().toString().length() < 1){
+                if (descriptionEditText.getText().toString().length() < 1) {
                     Toast.makeText(getContext(), getResources().getString(R.string.enter_description_to_add_payment), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (groupManager.getCurrentGroup() != null) {
-                    int day = daySpinner.getSelectedItemPosition()+1;
-                    int month = monthSpinner.getSelectedItemPosition()+1;
-                    int year = yearSpinner.getSelectedItemPosition()+2018;
+                    int day = daySpinner.getSelectedItemPosition() + 1;
+                    int month = monthSpinner.getSelectedItemPosition() + 1;
+                    int year = yearSpinner.getSelectedItemPosition() + 2018;
                     int amount = Integer.parseInt(amountEditText.getText().toString().trim());
                     String description = descriptionEditText.getText().toString().trim();
                     String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -92,7 +95,9 @@ public class AddPaymentFragment extends Fragment {
                     amountEditText.setText("");
                     descriptionEditText.setText("");
                     Toast.makeText(getContext(), getResources().getString(R.string.saved_payment), Toast.LENGTH_SHORT).show();
-                    paymentAdapter.notifyDataSetChanged();
+
+                    if (paymentAdapter != null)
+                        paymentAdapter.notifyDataSetChanged();
                 }
             }
         });

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.splittab.FirebaseTemplates.Group;
+import com.example.splittab.FirebaseTemplates.Payment;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,8 +80,11 @@ public class JoinGroupDialog extends DialogFragment {
                             Group group = dataSnap.getValue(Group.class);
                             group.addParticipant(user.getDisplayName());
 
-                            for (DataSnapshot dataSnapP : dataSnap.child("participants").getChildren()) {
-                                group.addParticipant(dataSnapP.getValue(String.class));
+                            for (DataSnapshot dataSnap2 : dataSnap.child("participants").getChildren()) {
+                                group.addParticipant(dataSnap2.getValue(String.class));
+                            }
+                            for (DataSnapshot dataSnap3 : dataSnap.child("payments").getChildren()) {
+                                group.addPayment(dataSnap3.getValue(Payment.class));
                             }
                             groupManager.addGroup(group);
 
