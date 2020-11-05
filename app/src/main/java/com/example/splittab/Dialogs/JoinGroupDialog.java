@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.splittab.FirebaseTemplates.Group;
+import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.FirebaseTemplates.Payment;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
@@ -78,18 +79,20 @@ public class JoinGroupDialog extends DialogFragment {
                         if (key.equals(dataSnap.getKey())) {
                             GroupManager groupManager = GroupManager.getInstance();
                             Group group = dataSnap.getValue(Group.class);
-                            group.addParticipant(user.getDisplayName());
+                            Participant participant = new Participant(user.getUid(), user.getDisplayName(), 0, 0);
+                            group.addParticipant(participant);
 
                             for (DataSnapshot dataSnap2 : dataSnap.child("participants").getChildren()) {
-                                group.addParticipant(dataSnap2.getValue(String.class));
+                                group.addParticipant(dataSnap2.getValue(Participant.class));
                             }
                             for (DataSnapshot dataSnap3 : dataSnap.child("payments").getChildren()) {
                                 group.addPayment(dataSnap3.getValue(Payment.class));
                             }
-                            groupManager.addGroup(group);
+                            groupManager.addGroup(group, getContext());
+
 
                             GroupListDialog.groupAdapter.notifyDataSetChanged();
-                            groupsReference.child(key).child("participants").child(user.getUid()).setValue(user.getDisplayName());
+                            database.getReference("groups").child(key).child("participants").child(participant.getUserUID()).setValue(participant);
                             database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(group.getName());
                             dismiss();
                             return;

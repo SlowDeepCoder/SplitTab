@@ -8,7 +8,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 
+import com.example.splittab.Adapters.PaymentAdapter;
 import com.example.splittab.FirebaseTemplates.Group;
+import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.FirebaseTemplates.Payment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,11 +39,19 @@ public class GroupManager {
         return groupList;
     }
 
-    public void addGroup(Group group) {
+    public void addGroup(Group group, Context context) {
         groupList.add(group);
 
-        if (currentGroup == null)
+        if (currentGroup == null) {
             currentGroup = group;
+            AddPaymentFragment.paymentAdapter = new PaymentAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getPaymentList());
+            AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
+            AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
+
+            HistoryFragment.historyAdapter = new PaymentAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getPaymentList());
+            HistoryFragment.historyListView.setAdapter(AddPaymentFragment.paymentAdapter);
+            HistoryFragment.historyAdapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -94,7 +104,7 @@ public class GroupManager {
                             if (key.equals(dataSnap.getKey())) {
                                 Group group = dataSnap.getValue(Group.class);
                                 for (DataSnapshot dataSnap2 : dataSnap.child("participants").getChildren()) {
-                                    group.addParticipant(dataSnap2.getValue(String.class));
+                                    group.addParticipant(dataSnap2.getValue(Participant.class));
                                 }
                                 for (DataSnapshot dataSnap3 : dataSnap.child("payments").getChildren()) {
                                     group.addPayment(dataSnap3.getValue(Payment.class));

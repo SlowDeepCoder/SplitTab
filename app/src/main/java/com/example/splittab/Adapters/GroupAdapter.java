@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.splittab.FirebaseTemplates.Group;
+import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.R;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public class GroupAdapter extends ArrayAdapter<Group> {
         groupKey.setText(groupList.get(position).getKey());
 
         StringBuilder builder = new StringBuilder();
-        for(String s : group.getParticipantList()){
-            builder.append(s);
+        for(Participant p : group.getParticipantList()){
+            builder.append(p.getUserName());
             builder.append(", ");
         }
         builder.deleteCharAt(builder.lastIndexOf(","));

@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.splittab.Adapters.PaymentAdapter;
 import com.example.splittab.AddPaymentFragment;
 import com.example.splittab.FirebaseTemplates.Group;
+import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,14 +65,15 @@ public class CreateGroupDialog extends DialogFragment {
 
         String key = GroupManager.generateKey();
         Group group = new Group(key, groupName, user.getUid());
+        Participant participant = new Participant(user.getUid(), user.getDisplayName(), 0, 0);
 
         database.getReference("groups").child(key).setValue(group);
-        database.getReference("groups").child(key).child("participants").child(user.getUid()).setValue(user.getDisplayName());
+        database.getReference("groups").child(key).child("participants").child(participant.getUserUID()).setValue(participant);
         database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(groupName);
 
-        group.addParticipant(user.getDisplayName());
+        group.addParticipant(participant);
         GroupManager groupManager = GroupManager.getInstance();
-        groupManager.addGroup(group);
+        groupManager.addGroup(group, getContext());
 
         GroupListDialog.groupAdapter.notifyDataSetChanged();
         dismiss();
