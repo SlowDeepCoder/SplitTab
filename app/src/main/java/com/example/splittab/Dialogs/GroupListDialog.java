@@ -17,11 +17,13 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.splittab.Adapters.GroupAdapter;
+import com.example.splittab.Adapters.ParticipantAdapter;
 import com.example.splittab.Adapters.PaymentAdapter;
 import com.example.splittab.AddPaymentFragment;
 import com.example.splittab.FirebaseTemplates.Payment;
 import com.example.splittab.GroupManager;
 import com.example.splittab.HistoryFragment;
+import com.example.splittab.OverviewFragment;
 import com.example.splittab.R;
 
 public class GroupListDialog extends DialogFragment {
@@ -78,6 +80,10 @@ public class GroupListDialog extends DialogFragment {
                 HistoryFragment.historyAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
                 HistoryFragment.historyListView.setAdapter(AddPaymentFragment.paymentAdapter);
                 HistoryFragment.historyAdapter.notifyDataSetChanged();
+
+                OverviewFragment.participantAdapter = new ParticipantAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getParticipantList());
+                OverviewFragment.participantListView.setAdapter(OverviewFragment.participantAdapter);
+                OverviewFragment.participantAdapter.notifyDataSetChanged();
 
                 dismiss();
             }

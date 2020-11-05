@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 
+import com.example.splittab.Adapters.ParticipantAdapter;
 import com.example.splittab.Adapters.PaymentAdapter;
 import com.example.splittab.Dialogs.GroupListDialog;
 import com.example.splittab.FirebaseTemplates.Group;
@@ -47,13 +48,18 @@ public class GroupManager {
 
         if (currentGroup == null) {
             currentGroup = group;
-            AddPaymentFragment.paymentAdapter = new PaymentAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getPaymentList());
-            AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
-            AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
+                AddPaymentFragment.paymentAdapter = new PaymentAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getPaymentList());
+                AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
+                AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
 
-            HistoryFragment.historyAdapter = new PaymentAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getPaymentList());
-            HistoryFragment.historyListView.setAdapter(AddPaymentFragment.paymentAdapter);
-            HistoryFragment.historyAdapter.notifyDataSetChanged();
+                HistoryFragment.historyAdapter = new PaymentAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getPaymentList());
+                HistoryFragment.historyListView.setAdapter(AddPaymentFragment.paymentAdapter);
+                HistoryFragment.historyAdapter.notifyDataSetChanged();
+
+                OverviewFragment.participantAdapter = new ParticipantAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getParticipantList());
+                OverviewFragment.participantListView.setAdapter(OverviewFragment.participantAdapter);
+                OverviewFragment.participantAdapter.notifyDataSetChanged();
+
         }
     }
 
@@ -157,7 +163,7 @@ public class GroupManager {
                         if (payment.getKey().equals(snapshot.getValue(Payment.class).getKey()))
                             newPayment = false;
                     }
-                    if(newPayment) {
+                    if (newPayment) {
                         group.addPayment(snapshot.getValue(Payment.class));
                         AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
                         HistoryFragment.historyAdapter.notifyDataSetChanged();
@@ -195,16 +201,25 @@ public class GroupManager {
                         if (participant.getUserUID().equals(snapshot.getValue(Participant.class).getUserUID()))
                             newParticipant = false;
                     }
-                    if(newParticipant) {
+                    if (newParticipant) {
                         group.addParticipant(snapshot.getValue(Participant.class));
                         GroupListDialog.groupAdapter.notifyDataSetChanged();
+                        OverviewFragment.participantAdapter.notifyDataSetChanged();
                     }
 
                 }
 
                 @Override
                 public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                    if (snapshot.exists()) {
+                        Participant participant = snapshot.getValue(Participant.class);
+                        for (Participant p : group.getParticipantList()) {
+                            if (p.getUserUID().equals(participant.getUserUID())) {
+                                p.setCredit(participant.getCredit());
+                            }
+                        }
+                    }
+                    OverviewFragment.participantAdapter.notifyDataSetChanged();
                 }
 
                 @Override
