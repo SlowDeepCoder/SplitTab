@@ -94,8 +94,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -113,18 +111,18 @@ public class LoginActivity extends AppCompatActivity {
             @SuppressLint("RestrictedApi")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!snapshot.exists()){
+                if (!snapshot.exists()) {
                     reference.child(user.getUid()).setValue(new User(user.getDisplayName(), user.getEmail(), user.getUid()));       // New user
                     Log.d("newIntentAndSaveUser", "New user, saving data");
-            }
-                else {
-                    GroupManager.getInstance().loadGroupsFromFireBase(LoginActivity.this);        //Old user, load group data
+                } else {
+                    GroupManager.getInstance().loadGroupsFromFireBase();        //Old user, load group data
                     Log.d("newIntentAndSaveUser", "Old user, data not saved");
                 }
 
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+
             }
 
             @Override

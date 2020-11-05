@@ -6,14 +6,17 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.ActionMenuItemView;
 
 import com.example.splittab.Adapters.PaymentAdapter;
+import com.example.splittab.Dialogs.GroupListDialog;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.FirebaseTemplates.Payment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,7 +74,7 @@ public class GroupManager {
     }
 
 
-    public void loadGroupsFromFireBase(final Activity activity) {
+    public void loadGroupsFromFireBase() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final ArrayList<String> groupKeyList = new ArrayList<>();
@@ -93,6 +96,7 @@ public class GroupManager {
             }
         });
 
+
         DatabaseReference groupReference = database.getReference("groups");
         groupReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -112,9 +116,9 @@ public class GroupManager {
                                 groupList.add(group);                          /////  Söker efter varje nyckel och laddar in alla grupper i en lista
                             }
                         }
-                        setCurrentGroup(0);
-
                     }
+                    setCurrentGroup(0);
+                    setFirebasePaymentAndParticipantsListeners();
                 }
             }
 
@@ -122,8 +126,11 @@ public class GroupManager {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
+
     }
+
 
     public static String generateKey() {
         StringBuilder builder = new StringBuilder();
@@ -135,4 +142,87 @@ public class GroupManager {
         }
         return builder.toString();
     }
+
+    public void setFirebasePaymentAndParticipantsListeners() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final GroupManager groupManager = GroupManager.getInstance();
+
+        for (final Group group : groupManager.getGroupArrayList()) {
+            database.getReference("groups").child(group.getKey()).child("payments").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    boolean newPayment = true;
+                    for (int i = 0; i < group.getPaymentList().size(); i++) {
+                        Payment payment = group.getPaymentList().get(i);
+                        if (payment.getKey().equals(snapshot.getValue(Payment.class).getKey()))
+                            newPayment = false;
+                    }
+                    if(newPayment) {
+                        group.addPayment(snapshot.getValue(Payment.class));
+                        AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
+                        HistoryFragment.historyAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Log.d("onChildChanged", snapshot.toString());
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            database.getReference("groups").child(group.getKey()).child("participants").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    boolean newParticipant = true;
+                    for (int i = 0; i < group.getParticipantList().size(); i++) {
+                        Participant participant = group.getParticipantList().get(i);
+                        if (participant.getUserUID().equals(snapshot.getValue(Participant.class).getUserUID()))
+                            newParticipant = false;
+                    }
+                    if(newParticipant) {
+                        group.addParticipant(snapshot.getValue(Participant.class));
+                        GroupListDialog.groupAdapter.notifyDataSetChanged();
+                    }
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
 }

@@ -38,6 +38,7 @@ public class AddPaymentFragment extends Fragment {
     private GroupManager groupManager;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_payment_layout, container, false);
@@ -103,11 +104,14 @@ public class AddPaymentFragment extends Fragment {
         });
     }
 
+
+
     private void setSpinners() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date today = Calendar.getInstance().getTime();
         String s = dateFormat.format(today);
+
 
         int yearIndex = Integer.parseInt(s.substring(0, 4));
         int monthIndex = Integer.parseInt(s.substring(5, 7));

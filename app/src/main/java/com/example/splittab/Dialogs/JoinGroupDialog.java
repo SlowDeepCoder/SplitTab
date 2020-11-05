@@ -69,6 +69,7 @@ public class JoinGroupDialog extends DialogFragment {
         final String key = id;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final GroupManager groupManager = GroupManager.getInstance();
 
         final DatabaseReference groupsReference = database.getReference("groups");
         groupsReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -77,7 +78,6 @@ public class JoinGroupDialog extends DialogFragment {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                         if (key.equals(dataSnap.getKey())) {
-                            GroupManager groupManager = GroupManager.getInstance();
                             Group group = dataSnap.getValue(Group.class);
                             Participant participant = new Participant(user.getUid(), user.getDisplayName(), 0, 0);
                             group.addParticipant(participant);
@@ -94,10 +94,12 @@ public class JoinGroupDialog extends DialogFragment {
                             GroupListDialog.groupAdapter.notifyDataSetChanged();
                             database.getReference("groups").child(key).child("participants").child(participant.getUserUID()).setValue(participant);
                             database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(group.getName());
+                            groupManager.setFirebasePaymentAndParticipantsListeners();
                             dismiss();
                             return;
                         }
                     }
+
                 }
                 Toast.makeText(getContext(), getResources().getString(R.string.that_ID_doesnt_exist), Toast.LENGTH_SHORT).show();
             }

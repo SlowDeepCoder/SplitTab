@@ -75,6 +75,8 @@ public class CreateGroupDialog extends DialogFragment {
         GroupManager groupManager = GroupManager.getInstance();
         groupManager.addGroup(group, getContext());
 
+        groupManager.setFirebasePaymentAndParticipantsListeners();
+
         GroupListDialog.groupAdapter.notifyDataSetChanged();
         dismiss();
     }
