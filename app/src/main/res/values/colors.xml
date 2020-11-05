@@ -7,4 +7,6 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="credit_minus_red">#ff7f7f</color>
+    <color name="credit_plus_green">#90ee90</color>
 </resources>

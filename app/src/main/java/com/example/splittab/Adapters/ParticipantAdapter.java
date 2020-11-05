@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.R;
@@ -27,13 +28,28 @@ public class ParticipantAdapter extends ArrayAdapter<Participant> {
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.participant_list_item, parent, false);
 
-        TextView participantName = (TextView)convertView.findViewById(R.id.participant_name_textview);
-        TextView participantCredit = (TextView)convertView.findViewById(R.id.participant_credit_textview);
+        TextView participantName = (TextView) convertView.findViewById(R.id.participant_name_textview);
+        TextView participantCredit = (TextView) convertView.findViewById(R.id.participant_credit_textview);
+        ConstraintLayout background = (ConstraintLayout) convertView.findViewById(R.id.particpant_layout_background);
 
         Participant participant = getItem(position);
         participantName.setText(participantList.get(position).getUserName());
 
-        participantCredit.setText(String.valueOf(participantList.get(position).getCredit()));
+
+        int credit = participantList.get(position).getCredit();
+        if (credit < 0)
+            background.setBackgroundColor(getContext().getResources().getColor(R.color.credit_minus_red));
+        else if (credit > 0)
+            background.setBackgroundColor(getContext().getResources().getColor(R.color.credit_plus_green));
+        else
+            background.setBackgroundColor(getContext().getResources().getColor(R.color.white));
+
+        StringBuilder builder = new StringBuilder();
+        if (credit > 0)
+            builder.append("+");
+        builder.append(credit);
+        builder.append(" kr");
+        participantCredit.setText(builder.toString());
 
         return convertView;
     }
