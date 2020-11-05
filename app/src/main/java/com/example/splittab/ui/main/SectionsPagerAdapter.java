@@ -36,10 +36,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = new AddPaymentFragment();
                 break;
             case 1:
-                fragment = new OverviewFragment();
+                fragment = new HistoryFragment();
                 break;
             case 2:
-                fragment = new HistoryFragment();
+                fragment = new OverviewFragment();
                 break;
         }
         return fragment;

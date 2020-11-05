@@ -14,7 +14,7 @@ public class OverviewFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.history_layout, container, false);
+        return inflater.inflate(R.layout.overview_layout, container, false);
     }
 
 }
