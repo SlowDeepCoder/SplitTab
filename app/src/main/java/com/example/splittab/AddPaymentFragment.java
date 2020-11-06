@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -98,6 +99,7 @@ public class AddPaymentFragment extends Fragment {
                     Toast.makeText(getContext(), getResources().getString(R.string.saved_payment), Toast.LENGTH_SHORT).show();
 
                     if (paymentAdapter != null)
+                        Collections.reverse(groupManager.getCurrentGroup().getPaymentList());
                         paymentAdapter.notifyDataSetChanged();
                 }
             }
