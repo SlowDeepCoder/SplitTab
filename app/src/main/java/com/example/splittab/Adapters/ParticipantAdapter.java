@@ -35,7 +35,6 @@ public class ParticipantAdapter extends ArrayAdapter<Participant> {
         Participant participant = getItem(position);
         participantName.setText(participantList.get(position).getUserName());
 
-
         int credit = participantList.get(position).getCredit();
         if (credit < 0)
             background.setBackgroundColor(getContext().getResources().getColor(R.color.credit_minus_red));

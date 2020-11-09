@@ -32,8 +32,7 @@ public class GroupManager {
     private ArrayList<Group> groupList = new ArrayList<>();
     private Group currentGroup;
 
-    private GroupManager() {
-    }
+    private GroupManager() { }
 
     public static GroupManager getInstance() {
         return GROUP_MANAGER;
@@ -63,7 +62,6 @@ public class GroupManager {
         }
     }
 
-
     public Group getCurrentGroup() {
         return currentGroup;
     }
@@ -78,7 +76,6 @@ public class GroupManager {
             Log.d("setCurrentGroup", "currentGroup satt till " + currentGroup.getName());
         }
     }
-
 
     public void loadGroupsFromFireBase() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -101,7 +98,6 @@ public class GroupManager {
 
             }
         });
-
 
         DatabaseReference groupReference = database.getReference("groups");
         groupReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -132,11 +128,8 @@ public class GroupManager {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
         });
-
     }
-
 
     public static String generateKey() {
         StringBuilder builder = new StringBuilder();
@@ -239,5 +232,4 @@ public class GroupManager {
             });
         }
     }
-
 }

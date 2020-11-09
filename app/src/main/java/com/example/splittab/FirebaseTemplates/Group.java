@@ -68,7 +68,6 @@ public class Group {
         return participantList;
     }
 
-
     public ArrayList<Payment> getPaymentList() {
         return paymentList;
     }
@@ -85,7 +84,6 @@ public class Group {
         final String paymentKey = database.getReference().push().getKey();
         payment.setKey(paymentKey);
 
-
         database.getReference("groups").child(key).child("participants").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -97,11 +95,9 @@ public class Group {
                     currentParticipant.setAmountPayed(newAmountPayed);
                     currentParticipant.setCredit(newCredit);
 
-
                     database.getReference("groups").child(key).child("payments").child(paymentKey).setValue(payment);
                     database.getReference("groups").child(key).child("participants").child(user.getUid()).child("amountPayed").setValue(newAmountPayed);
                     database.getReference("groups").child(key).child("participants").child(user.getUid()).child("credit").setValue(newCredit);
-
 
                     if (participantList.size() > 1) {
                         database.getReference("groups").child(key).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {

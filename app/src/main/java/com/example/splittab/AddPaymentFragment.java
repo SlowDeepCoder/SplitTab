@@ -38,8 +38,6 @@ public class AddPaymentFragment extends Fragment {
     public static ListView paymentListView;
     private GroupManager groupManager;
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_payment_layout, container, false);
@@ -50,10 +48,8 @@ public class AddPaymentFragment extends Fragment {
         setSpinners();
 
         if (groupManager.getCurrentGroup() != null) {
-            //Adapter
             paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
 
-            //Connect paymentAdapter to ListView
             paymentListView.setAdapter(paymentAdapter);
         }
         return view;
@@ -63,7 +59,6 @@ public class AddPaymentFragment extends Fragment {
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //paymentManager.addPayment(new Payment(day,month,year,amount, itemDescription));
 
                 if (groupManager.getCurrentGroup() == null) {
                     Toast.makeText(getContext(), getResources().getString(R.string.no_group_selected), Toast.LENGTH_SHORT).show();
@@ -90,7 +85,6 @@ public class AddPaymentFragment extends Fragment {
                     String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
                     Payment payment = new Payment(day, month, year, amount, description, userUID, userName);
-//                    paymentAdapter.add(payment);
 
                     groupManager.getCurrentGroup().createPaymentAndSaveToFireBase(payment, getContext());
 
@@ -99,21 +93,18 @@ public class AddPaymentFragment extends Fragment {
                     Toast.makeText(getContext(), getResources().getString(R.string.saved_payment), Toast.LENGTH_SHORT).show();
 
                     if (paymentAdapter != null)
-                        Collections.reverse(groupManager.getCurrentGroup().getPaymentList());
+                        groupManager.getCurrentGroup().getPaymentList().size();
                         paymentAdapter.notifyDataSetChanged();
                 }
             }
         });
     }
 
-
-
     private void setSpinners() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date today = Calendar.getInstance().getTime();
         String s = dateFormat.format(today);
-
 
         int yearIndex = Integer.parseInt(s.substring(0, 4));
         int monthIndex = Integer.parseInt(s.substring(5, 7));
