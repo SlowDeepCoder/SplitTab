@@ -41,4 +41,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
 
     implementation 'androidx.preference:preference:1.1.0-rc01'
+
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation 'com.google.firebase:firebase-storage'
 }

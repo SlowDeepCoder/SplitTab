@@ -9,4 +9,5 @@
     <color name="white">#FFFFFF</color>
     <color name="credit_minus_red">#ff7f7f</color>
     <color name="credit_plus_green">#90ee90</color>
+    <color name="toolbar_text_color">#FFFFFF</color>
 </resources>
