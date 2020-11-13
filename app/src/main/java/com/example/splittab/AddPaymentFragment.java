@@ -50,7 +50,6 @@ public class AddPaymentFragment extends Fragment {
         if (groupManager.getCurrentGroup() != null) {
             paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
 
-            Collections.reverse(groupManager.getCurrentGroup().getPaymentList());
             paymentListView.setAdapter(paymentAdapter);
         }
         return view;

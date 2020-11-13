@@ -77,7 +77,7 @@ public class Group {
     }
 
     public void createPaymentAndSaveToFireBase(final Payment payment, Context context) {
-        paymentList.add(0,payment);
+        paymentList.add(payment);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
