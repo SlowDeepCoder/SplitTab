@@ -40,6 +40,8 @@ public class ReceiptFragment extends Fragment {
     private StorageReference mStorageRef;
     private Bitmap picture;
 
+    //TODO Try catch så att man kan klicka på upload knappen utan att ha en bild i rutan. Krashat atm
+    //TODO lägga till galleri så man ser alla bilder som är tagna
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.receipt_layout, container, false);

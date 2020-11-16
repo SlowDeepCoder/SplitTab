@@ -52,9 +52,12 @@
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:visibility="gone"
-        tools:layout_editor_absoluteX="180dp"
-        tools:layout_editor_absoluteY="142dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/receipt_imageview"
+        app:layout_constraintEnd_toEndOf="@+id/receipt_imageview"
+        app:layout_constraintStart_toStartOf="@+id/receipt_imageview"
+        app:layout_constraintTop_toTopOf="@+id/receipt_imageview" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
