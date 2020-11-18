@@ -3,6 +3,7 @@
     <string name="tab_text_1">Add Payment</string>
     <string name="tab_text_2">History</string>
     <string name="tab_text_3">Overview</string>
+    <string name="tab_text_4">Receipts</string>
     <string name="amount">Amount</string>
     <string name="description">Description</string>
     <string name="add_payment">Add Payment</string>
