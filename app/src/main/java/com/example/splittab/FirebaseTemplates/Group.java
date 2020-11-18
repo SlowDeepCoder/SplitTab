@@ -77,52 +77,66 @@ public class Group {
     }
 
     public void createPaymentAndSaveToFireBase(final Payment payment, Context context) {
-        paymentList.add(0,payment);
+        paymentList.add(0, payment);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final double splitAmount = payment.getAmount() / payment.participantsList().size();
 
         final String paymentKey = database.getReference().push().getKey();
         payment.setKey(paymentKey);
 
-        database.getReference("groups").child(key).child("participants").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        database.getReference("groups").child(key).child("payments").child(paymentKey).setValue(payment);
+
+
+        database.getReference("groups").child(key).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    final Participant currentParticipant = dataSnapshot.getValue(Participant.class);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (Participant p : payment.participantsList()) {
+                    database.getReference("groups").child(key).child("payments").child(paymentKey).child("participants").child(p.getUserUID()).setValue(p.getUserName());
 
-                    int newAmountPayed = currentParticipant.getAmountPayed() + payment.getAmount();
-                    int newCredit = currentParticipant.getCredit() + payment.getAmount();
-                    currentParticipant.setAmountPayed(newAmountPayed);
-                    currentParticipant.setCredit(newCredit);
+                    double oldAmountOtherUser = 0.0;
+                    double oldAmountCurrentUser = 0.0;
+                    double newAmountOtherUser = 0.0;
+                    double newAmountCurrentUse = 0.0;
+                    if (!p.getUserUID().equals(user.getUid())) {
+                        try {
+                            oldAmountOtherUser = snapshot.child(p.getUserUID()).child("credit").child(user.getUid()).child("amount").getValue(Double.class);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        } finally {
+                            newAmountOtherUser = oldAmountOtherUser - splitAmount;
+                        }
 
-                    database.getReference("groups").child(key).child("payments").child(paymentKey).setValue(payment);
-                    database.getReference("groups").child(key).child("participants").child(user.getUid()).child("amountPayed").setValue(newAmountPayed);
-                    database.getReference("groups").child(key).child("participants").child(user.getUid()).child("credit").setValue(newCredit);
+                        try {
+                            oldAmountCurrentUser = snapshot.child(user.getUid()).child("credit").child(p.getUserUID()).child("amount").getValue(Double.class);
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                        } finally {
+                            newAmountCurrentUse = oldAmountCurrentUser + splitAmount;
+                        }
 
-                    if (participantList.size() > 1) {
-                        database.getReference("groups").child(key).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    for (DataSnapshot dataSnap : snapshot.getChildren()) {
-                                        Participant p = dataSnap.getValue(Participant.class);
-                                        if (p.getUserUID().equals(currentParticipant.getUserUID()))
-                                            continue;
-
-                                        int newCredit = p.getCredit() - payment.getAmount() / (participantList.size() - 1);
-                                        p.setCredit(newCredit);
-                                        database.getReference("groups").child(key).child("participants").child(p.getUserUID()).child("credit").setValue(newCredit);
-
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                        database.getReference("groups").child(key).child("participants").child(p.getUserUID()).child("credit").child(user.getUid()).child("amount").setValue(newAmountOtherUser);
+                        database.getReference("groups").child(key).child("participants").child(user.getUid()).child("credit").child(p.getUserUID()).child("amount").setValue(newAmountCurrentUse);
                     }
+
+
+//                    else {
+//                        for (Participant p2 : payment.participantsList()) {
+//                            try {
+//                                oldAmount = snapshot.child(user.getUid()).child("credit").child(p2.getUserUID()).child("amount").getValue(Double.class);
+//                            } catch (NullPointerException e) {
+//                                e.printStackTrace();
+//                            } finally {
+//                                newAmount = oldAmount + splitAmount;
+//                            }
+//                            if (!p2.getUserUID().equals(user.getUid()))
+//                                database.getReference("groups").child(key).child("participants").child(p.getUserUID()).child("credit").child(p2.getUserUID()).child("amount").setValue(newAmount);
+//                        }
+//                    }
+
+
+
                 }
             }
 
@@ -133,8 +147,78 @@ public class Group {
         });
 
 
-        //
-        //   Notify on data changed!
-        //
+//        database.getReference("groups").child(key).child("participants").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    final Participant currentParticipant = dataSnapshot.getValue(Participant.class);
+//
+//
+//                    database.getReference("groups").child(key).child("payments").child(paymentKey).setValue(payment);
+//
+//                    double splitAmount = payment.getAmount()/payment.participantsList().size();
+//                    for (Participant p : payment.participantsList()) {
+//                        database.getReference("groups").child(key).child("payments").child(paymentKey).child("participants").child(p.getUserUID()).setValue(p.getUserName());
+//
+//
+//                        database.getReference("groups").child(key).child("participants").child(p.getUserUID()).child("credit")
+//                    }
+//
+//
+//                    int newAmountPayed = currentParticipant.getAmountPayed() + payment.getAmount();
+//                    database.getReference("groups").child(key).child("participants").child(user.getUid()).child("amountPayed").setValue(newAmountPayed);
+//
+//                    for (Participant p : payment.getTheSelectedParticipantsList()) {
+//                        if (dataSnapshot.child("credit").child(p.getUserUID()).exists()) {
+//                            Credit credit = dataSnapshot.child("credit").child(p.getUserUID()).getValue(Credit.class);
+//                            int newCredit = credit.getCredit() + payment.getAmount();
+//                            database.getReference("groups").child(key).child("participants")
+//                        }
+//                    }
+//
+//
+//                    currentParticipant.setAmountPayed(newAmountPayed);
+//                    currentParticipant.setCredit(newCredit);
+//
+//                    database.getReference("groups").child(key).child("participants").child(user.getUid()).child("credit").setValue(newCredit);
+//
+//
+//                    if (participantList.size() > 1) {
+//                        database.getReference("groups").child(key).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                if (snapshot.exists()) {
+//                                    for (DataSnapshot dataSnap : snapshot.getChildren()) {
+//                                        Participant p = dataSnap.getValue(Participant.class);
+//                                        if (p.getUserUID().equals(currentParticipant.getUserUID()))
+//                                            continue;
+//
+//                                        int newCredit = p.getCredit() - payment.getAmount() / (participantList.size() - 1);
+//                                        p.setCredit(newCredit);
+//                                        database.getReference("groups").child(key).child("participants").child(p.getUserUID()).child("credit").setValue(newCredit);
+//
+//                                    }
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
     }
+//        });
+//
+//
+    //
+    //   Notify on data changed!
+    //
+//    }
 }

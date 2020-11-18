@@ -1,15 +1,19 @@
 package com.example.splittab.FirebaseTemplates;
 
+import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+
 public class Participant {
     private String userUID, userName;
     private int amountPayed;
-    private int credit;
+    private ArrayList<Credit> creditList = new ArrayList<>();
 
-    public Participant(String userUID, String userName, int amountPayed, int credit) {
+    public Participant(String userUID, String userName, int amountPayed, ArrayList<Credit> creditList) {
         this.userUID = userUID;
         this.userName = userName;
         this.amountPayed = amountPayed;
-        this.credit = credit;
+        this.creditList = creditList;
     }
 
     public Participant() {
@@ -31,19 +35,20 @@ public class Participant {
         this.amountPayed = amountPayed;
     }
 
-    public int getCredit() {
-        return credit;
-    }
-
-    public void setCredit(int credit) {
-        this.credit = credit;
-    }
-
     public String getUserName() {
         return userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void addCredit(Credit credit) {
+        if (credit != null)
+            creditList.add(credit);
+    }
+
+    public ArrayList<Credit> creditList() {
+        return creditList;
     }
 }

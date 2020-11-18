@@ -32,7 +32,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 FeedbackDialog dialog = new FeedbackDialog();
-                dialog.show(getActivity().getSupportFragmentManager(), "Join Group");
+                dialog.show(getActivity().getSupportFragmentManager(), "Feedback");
                 return true;
             }
         });

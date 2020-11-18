@@ -2,6 +2,7 @@ package com.example.splittab;
 
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -14,9 +15,12 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.splittab.Adapters.PaymentAdapter;
+import com.example.splittab.Dialogs.SelectParticipantsDialog;
+import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.FirebaseTemplates.Payment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,10 +36,11 @@ import java.util.TimeZone;
 public class AddPaymentFragment extends Fragment {
     private Spinner daySpinner, monthSpinner, yearSpinner;
     private EditText amountEditText, descriptionEditText;
-    private Button addPaymentButton;
+    private Button addPaymentButton, selectParticipantsButton;
     private GroupManager paymentManager;
     public static PaymentAdapter paymentAdapter;
     public static ListView paymentListView;
+    public static ArrayList<Participant> selectedParticipantList = new ArrayList<>();
     private GroupManager groupManager;
 
     @Override
@@ -76,6 +81,11 @@ public class AddPaymentFragment extends Fragment {
                     return;
                 }
 
+                if (selectedParticipantList.size() < 1) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.enter_participants), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (groupManager.getCurrentGroup() != null) {
                     int day = daySpinner.getSelectedItemPosition() + 1;
                     int month = monthSpinner.getSelectedItemPosition() + 1;
@@ -85,7 +95,7 @@ public class AddPaymentFragment extends Fragment {
                     String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-                    Payment payment = new Payment(day, month, year, amount, description, userUID, userName);
+                    Payment payment = new Payment(day, month, year, amount, description, userUID, userName, selectedParticipantList);
 
                     groupManager.getCurrentGroup().createPaymentAndSaveToFireBase(payment, getContext());
 
@@ -94,9 +104,17 @@ public class AddPaymentFragment extends Fragment {
                     Toast.makeText(getContext(), getResources().getString(R.string.saved_payment), Toast.LENGTH_SHORT).show();
 
                     if (paymentAdapter != null)
-                        groupManager.getCurrentGroup().getPaymentList().size();
                         paymentAdapter.notifyDataSetChanged();
+
                 }
+            }
+        });
+        selectParticipantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SelectParticipantsDialog dialog = new SelectParticipantsDialog();
+                dialog.setCancelable(false);
+                dialog.show(getActivity().getSupportFragmentManager(), "Select Participant Dialog");
             }
         });
     }
@@ -124,6 +142,7 @@ public class AddPaymentFragment extends Fragment {
         amountEditText.setInputType(InputType.TYPE_CLASS_NUMBER);   //Siffertagentbord
         descriptionEditText = (EditText) view.findViewById(R.id.editTextDescription);
         addPaymentButton = (Button) view.findViewById(R.id.add_payment_button);
+        selectParticipantsButton = (Button)view.findViewById(R.id.select_participants_button);
         paymentListView = view.findViewById(R.id.lastPaymentListView);
     }
 }

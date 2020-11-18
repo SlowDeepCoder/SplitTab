@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.example.splittab.Adapters.PaymentAdapter;
 import com.example.splittab.Dialogs.GroupListDialog;
+import com.example.splittab.Dialogs.SelectParticipantsDialog;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.FirebaseTemplates.Payment;
@@ -32,7 +33,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements SelectParticipantsDialog.onMultipleChoiceListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +121,16 @@ public class MainActivity extends AppCompatActivity {
             if (groupManager.getCurrentGroup() != null) {
                 ActionMenuItemView item = (ActionMenuItemView) findViewById(R.id.actionbarGroup);
                 item.setTitle(groupManager.getCurrentGroup().getName());
+
             }
 
             return super.onCreateView(name, context, attrs);
         }
+
+    @Override
+
+
+    public void onPositiveButtonClicked(String[] usernameList, ArrayList<Participant> selectedParticipantList) {
+        AddPaymentFragment.selectedParticipantList = selectedParticipantList;
     }
+}

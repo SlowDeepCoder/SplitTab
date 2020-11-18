@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.splittab.Adapters.PaymentAdapter;
 import com.example.splittab.AddPaymentFragment;
+import com.example.splittab.FirebaseTemplates.Credit;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.GroupManager;
@@ -19,6 +20,8 @@ import com.example.splittab.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class CreateGroupDialog extends DialogFragment {
     private EditText editText;
@@ -65,7 +68,7 @@ public class CreateGroupDialog extends DialogFragment {
 
         String key = GroupManager.generateKey();
         Group group = new Group(key, groupName, user.getUid());
-        Participant participant = new Participant(user.getUid(), user.getDisplayName(), 0, 0);
+        Participant participant = new Participant(user.getUid(), user.getDisplayName(), 0, new ArrayList<Credit>());
 
         database.getReference("groups").child(key).setValue(group);
         database.getReference("groups").child(key).child("participants").child(participant.getUserUID()).setValue(participant);

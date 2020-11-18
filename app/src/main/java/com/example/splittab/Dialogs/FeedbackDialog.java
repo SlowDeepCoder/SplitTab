@@ -29,6 +29,7 @@ public class FeedbackDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.feedback_dialog_layout, null);
+
         builder.setView(view).setTitle(getResources().getString(R.string.feedback));
 
         editTextFeedback = (EditText)view.findViewById(R.id.editTextEnterFeedback);

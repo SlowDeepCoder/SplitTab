@@ -10,11 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.splittab.Adapters.ParticipantAdapter;
-import com.example.splittab.Adapters.PaymentAdapter;
+import com.example.splittab.Adapters.CreditAdapter;
 
 public class OverviewFragment extends Fragment {
-    public static ParticipantAdapter participantAdapter;
+    public static CreditAdapter creditAdapter;
     public static ListView participantListView;
     private GroupManager groupManager;
 
@@ -26,10 +25,10 @@ public class OverviewFragment extends Fragment {
 
         if (groupManager.getCurrentGroup() != null) {
             //Create adapter
-            participantAdapter = new ParticipantAdapter(getContext(), R.layout.history_layout, groupManager.getCurrentGroup().getParticipantList());
-
-            //Connect historyAdapter to ListView
-            participantListView.setAdapter(participantAdapter);
+            creditAdapter = new CreditAdapter(getContext(), R.layout.history_layout, groupManager.getCurrentParticipant().creditList());
+//
+//            //Connect historyAdapter to ListView
+            participantListView.setAdapter(creditAdapter);
         }
         return view;
     }

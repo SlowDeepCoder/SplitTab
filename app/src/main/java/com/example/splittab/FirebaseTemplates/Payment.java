@@ -1,13 +1,16 @@
 package com.example.splittab.FirebaseTemplates;
 
+import java.util.ArrayList;
+
 public class Payment {
     private int day, month, year;
     private int amount;
     private String description;
     private String userName, userUID;
     private String key;
+    private ArrayList<Participant> selectedParticipants;
 
-    public Payment(int day, int month, int year, int amount, String description, String userUID, String userName) {
+    public Payment(int day, int month, int year, int amount, String description, String userUID, String userName, ArrayList<Participant> selectedParticipants) {
         this.day = day;
         this.month = month;
         this.year = year;
@@ -15,6 +18,7 @@ public class Payment {
         this.description = description;
         this.userUID = userUID;
         this.userName = userName;
+        this.selectedParticipants = selectedParticipants;
     }
 
     public Payment(){}
@@ -81,5 +85,9 @@ public class Payment {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public ArrayList<Participant> participantsList() {
+        return selectedParticipants;
     }
 }

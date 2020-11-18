@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.splittab.FirebaseTemplates.Credit;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.FirebaseTemplates.Payment;
@@ -23,6 +24,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class JoinGroupDialog extends DialogFragment {
     private EditText editText;
@@ -79,8 +82,8 @@ public class JoinGroupDialog extends DialogFragment {
                     for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {
                         if (key.equals(dataSnap.getKey())) {
                             Group group = dataSnap.getValue(Group.class);
-                            Participant participant = new Participant(user.getUid(), user.getDisplayName(), 0, 0);
-                            group.addParticipant(participant);
+
+
 
                             for (DataSnapshot dataSnap2 : dataSnap.child("participants").getChildren()) {
                                 group.addParticipant(dataSnap2.getValue(Participant.class));
@@ -88,12 +91,29 @@ public class JoinGroupDialog extends DialogFragment {
                             for (DataSnapshot dataSnap3 : dataSnap.child("payments").getChildren()) {
                                 group.addPayment(dataSnap3.getValue(Payment.class));
                             }
-                            groupManager.addGroup(group, getContext());
 
 
-                            GroupListDialog.groupAdapter.notifyDataSetChanged();
-                            database.getReference("groups").child(key).child("participants").child(participant.getUserUID()).setValue(participant);
+
+                            ArrayList<Credit> creditList = new ArrayList<>();
+                            for(Participant p : group.getParticipantList()){
+                                creditList.add(new Credit(0.0, p.getUserUID(), p.getUserName()));
+                            }
+
+
+
+                            Participant currentParticipant = new Participant(user.getUid(), user.getDisplayName(), 0, creditList);
+                            group.addParticipant(currentParticipant);
+                            database.getReference("groups").child(key).child("participants").child(currentParticipant.getUserUID()).setValue(currentParticipant);
                             database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(group.getName());
+
+                            for(Credit c : creditList){
+                                database.getReference("groups").child(key).child("participants").child(currentParticipant.getUserUID()).child("credit").child(c.getUserUID()).setValue(c);
+                                Credit c2 = new Credit(0.0, currentParticipant.getUserUID(), currentParticipant.getUserName());
+                                database.getReference("groups").child(key).child("participants").child(c.getUserUID()).child("credit").child(currentParticipant.getUserUID()).setValue(c2);
+                            }
+
+                            groupManager.addGroup(group, getContext());
+                            GroupListDialog.groupAdapter.notifyDataSetChanged();
                             groupManager.setFirebasePaymentAndParticipantsListeners();
                             dismiss();
                             return;

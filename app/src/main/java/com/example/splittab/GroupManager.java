@@ -1,17 +1,15 @@
 package com.example.splittab;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.view.menu.ActionMenuItemView;
 
-import com.example.splittab.Adapters.ParticipantAdapter;
+import com.example.splittab.Adapters.CreditAdapter;
 import com.example.splittab.Adapters.PaymentAdapter;
 import com.example.splittab.Dialogs.GroupListDialog;
+import com.example.splittab.FirebaseTemplates.Credit;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.FirebaseTemplates.Payment;
@@ -31,8 +29,10 @@ public class GroupManager {
     private static final GroupManager GROUP_MANAGER = new GroupManager();
     private ArrayList<Group> groupList = new ArrayList<>();
     private Group currentGroup;
+    private Participant currentParticipant;
 
-    private GroupManager() { }
+    private GroupManager() {
+    }
 
     public static GroupManager getInstance() {
         return GROUP_MANAGER;
@@ -47,17 +47,20 @@ public class GroupManager {
 
         if (currentGroup == null) {
             currentGroup = group;
-                AddPaymentFragment.paymentAdapter = new PaymentAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getPaymentList());
-                AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
-                AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
+            setCurrentParticipant();
 
-                HistoryFragment.historyAdapter = new PaymentAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getPaymentList());
-                HistoryFragment.historyListView.setAdapter(AddPaymentFragment.paymentAdapter);
-                HistoryFragment.historyAdapter.notifyDataSetChanged();
+            AddPaymentFragment.paymentAdapter = new PaymentAdapter(context, R.layout.payment_list_item, getCurrentGroup().getPaymentList());
+            AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
+            AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
 
-                OverviewFragment.participantAdapter = new ParticipantAdapter(context, R.layout.payment_list_item, GroupManager.getInstance().getCurrentGroup().getParticipantList());
-                OverviewFragment.participantListView.setAdapter(OverviewFragment.participantAdapter);
-                OverviewFragment.participantAdapter.notifyDataSetChanged();
+            HistoryFragment.historyAdapter = new PaymentAdapter(context, R.layout.payment_list_item, getCurrentGroup().getPaymentList());
+            HistoryFragment.historyListView.setAdapter(AddPaymentFragment.paymentAdapter);
+            HistoryFragment.historyAdapter.notifyDataSetChanged();
+
+
+            OverviewFragment.creditAdapter = new CreditAdapter(context, R.layout.payment_list_item, getCurrentParticipant().creditList());
+            OverviewFragment.participantListView.setAdapter(OverviewFragment.creditAdapter);
+            OverviewFragment.creditAdapter.notifyDataSetChanged();
 
         }
     }
@@ -66,13 +69,25 @@ public class GroupManager {
         return currentGroup;
     }
 
-    public void setCurrentGroup(Group currentGroup) {
-        this.currentGroup = currentGroup;
+
+    private void setCurrentParticipant(){
+        for (Participant p : currentGroup.getParticipantList()) {
+            if(p.getUserUID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                currentParticipant = p;
+                Log.d("setCurrentParticipant", "currentParticipant satt");
+                Log.d("setCurrentParticipant", currentParticipant.creditList().size()+"");
+            }
+        }
+    }
+
+    public Participant getCurrentParticipant() {
+        return currentParticipant;
     }
 
     public void setCurrentGroup(int index) {
         if (index < groupList.size() && index >= 0) {
-            this.currentGroup = groupList.get(index);
+            currentGroup = groupList.get(index);
+            setCurrentParticipant();
             Log.d("setCurrentGroup", "currentGroup satt till " + currentGroup.getName());
         }
     }
@@ -110,10 +125,16 @@ public class GroupManager {
                             if (key.equals(dataSnap.getKey())) {
                                 Group group = dataSnap.getValue(Group.class);
                                 for (DataSnapshot dataSnap2 : dataSnap.child("participants").getChildren()) {
-                                    group.addParticipant(dataSnap2.getValue(Participant.class));
+                                    Participant participant = dataSnap2.getValue(Participant.class);
+                                    Log.d("Load participant", dataSnap2.toString());
+                                    for (DataSnapshot dataSnap3 : dataSnap2.child("credit").getChildren()) {
+                                        participant.addCredit(dataSnap3.getValue(Credit.class));
+                                        Log.d("Load credit", dataSnap3.toString());
+                                    }
+                                    group.addParticipant(participant);
                                 }
-                                for (DataSnapshot dataSnap3 : dataSnap.child("payments").getChildren()) {
-                                    group.addPayment(dataSnap3.getValue(Payment.class));
+                                for (DataSnapshot dataSnap4 : dataSnap.child("payments").getChildren()) {
+                                    group.addPayment(dataSnap4.getValue(Payment.class));
                                 }
                                 groupList.add(group);                          /////  Söker efter varje nyckel och laddar in alla grupper i en lista
                             }
@@ -165,7 +186,6 @@ public class GroupManager {
 
                 @Override
                 public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    Log.d("onChildChanged", snapshot.toString());
 
                 }
 
@@ -195,24 +215,19 @@ public class GroupManager {
                             newParticipant = false;
                     }
                     if (newParticipant) {
+                        Participant participant = snapshot.getValue(Participant.class);
+                        for (DataSnapshot snapshot2 : snapshot.child("credit").getChildren()) {
+                            participant.addCredit(snapshot2.getValue(Credit.class));
+                        }
                         group.addParticipant(snapshot.getValue(Participant.class));
                         GroupListDialog.groupAdapter.notifyDataSetChanged();
-                        OverviewFragment.participantAdapter.notifyDataSetChanged();
+                        OverviewFragment.creditAdapter.notifyDataSetChanged();
                     }
 
                 }
 
                 @Override
                 public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    if (snapshot.exists()) {
-                        Participant participant = snapshot.getValue(Participant.class);
-                        for (Participant p : group.getParticipantList()) {
-                            if (p.getUserUID().equals(participant.getUserUID())) {
-                                p.setCredit(participant.getCredit());
-                            }
-                        }
-                    }
-                    OverviewFragment.participantAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -230,6 +245,62 @@ public class GroupManager {
 
                 }
             });
+
+            for(final Participant p : group.getParticipantList()) {
+                for(final Credit c : p.creditList()) {
+                    database.getReference("groups").child(group.getKey()).child("participants").child(p.getUserUID()).child("credit").addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            if (snapshot.exists()) {
+                                Log.d("onChildChanged", snapshot.toString());
+                                Credit credit = snapshot.getValue(Credit.class);
+                                for (Credit c2 : p.creditList()) {
+                                    if (c.getUserUID().equals(c2.getUserUID())) {
+                                        c2.setAmount(credit.getAmount());
+                                    }
+                                }
+                                OverviewFragment.creditAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
     }
 }
