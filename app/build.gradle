@@ -44,4 +44,6 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-storage'
+
+    implementation "com.squareup.picasso:picasso:2.5.2"
 }
