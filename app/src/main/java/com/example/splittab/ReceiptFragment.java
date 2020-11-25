@@ -23,7 +23,9 @@ import com.example.splittab.Adapters.GalleryAdapter;
 import com.example.splittab.FirebaseTemplates.Picture;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -32,6 +34,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class ReceiptFragment extends Fragment {
+
+    //TODO om bilden finns i gallerian ska den inte gå att ladda upp igen
 
     private ImageView receiptImageview;
     private Button takePhotoButton;
@@ -43,10 +47,9 @@ public class ReceiptFragment extends Fragment {
     private ArrayList<Picture> picturePathList;
     private static final int NUM_GRID_COLUMNs = 3;
     private GalleryAdapter galleryAdapter;
-
-
     private RecyclerView galeryRecycleView;
     private RecyclerView.Adapter adapter;
+    private StorageReference firebaseStorageRef = storage.getReference().child("firebasephotos");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,12 +61,11 @@ public class ReceiptFragment extends Fragment {
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         picturePathList = new ArrayList<>();
-        //gridAdapter = new GridAdapter(getContext(), R.layout.galery_view_item, picturePathList);
-
         galleryAdapter = new GalleryAdapter(picturePathList,getContext());
         galeryRecycleView = view.findViewById(R.id.galery_recycleview);
         galeryRecycleView.setAdapter(galleryAdapter);
 
+        loadImages();
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +118,6 @@ public class ReceiptFragment extends Fragment {
                                 public void onSuccess(Uri uri) {
                                     Uri downloadUri = uri;
                                     Log.e("HF", "URI: " + downloadUri);
-                                    Log.e("HF", "URI toString: " + downloadUri.toString());
                                     //Ska lägga till linken i arraylinklistan
                                     picturePathList.add(new Picture(downloadUri.toString()));
                                     //notifydatachanges till gridden
@@ -138,65 +139,29 @@ public class ReceiptFragment extends Fragment {
         }
     }
 
+    public void loadImages(){
+     firebaseStorageRef.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        //for (StorageReference prefix : listResult.getPrefixes()) {
+                            // All the prefixes under firebaseStorageRef
+                        //}
 
-
-
-
-    //TODO lägga till galleri så man ser alla bilder som är tagna
-    //TODO Lägga till bilder i gallerian
-    /*public void init(){
-        if(getDirectoryPath(storage.getReference().getPath()) != null){
-            directories = getDirectoryPath(storage.getReference().getPath());
-        }
-
-
+                        for (StorageReference item : listResult.getItems()) {
+                            // All the items under firebaseStorageRef
+                            Task<Uri> oldPictureURL = item.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Uri downloadUri = uri;
+                                    picturePathList.add(new Picture(downloadUri.toString()));
+                                    Log.e("HF", "downloadUri.toString(): "+downloadUri.toString());
+                                    galleryAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    }
+                });
+        galleryAdapter.notifyDataSetChanged();
     }
-
-    private void setupGridView(){
-        //final ArrayList<String> imgURLs = getFilePath();
-
-        int gridWith = getResources().getDisplayMetrics().widthPixels;
-        int imageWith = gridWith/NUM_GRID_COLUMNs;
-        gridView.setColumnWidth(imageWith);
-
-        //Use grid adapter to adapt the images to the gridview
-    }
-    /**
-     * Find all direcoties
-     * @param directory
-     * @return
-
-    public ArrayList<String> getDirectoryPath(String directory){
-        ArrayList<String> pathArray = new ArrayList<>();
-        File file = new File(directory);
-        File[] listFiles = file.listFiles();
-        for(int i = 0; i < listFiles.length; i++){
-            if(listFiles[i].isDirectory()){
-                pathArray.add(listFiles[i].getAbsolutePath());
-            }
-        }
-        return pathArray;
-    }
-    /**
-     * Find all filepaths
-     * @param directory
-     * @return
-
-    public ArrayList<String> getFilePath(String directory){
-        ArrayList<String> pathArray = new ArrayList<>();
-        File file = new File(directory);
-        File[] listFiles = file.listFiles();
-        for(int i = 0; i < listFiles.length; i++){
-            if(listFiles[i].isFile()){
-                pathArray.add(listFiles[i].getAbsolutePath());
-            }
-        }
-        return pathArray;
-    }
-
-    private void setupGridView(){
-        final ArrayList<Photos> photos = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child(getString(R.string.group))
-    }*/
 }
