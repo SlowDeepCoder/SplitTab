@@ -2,6 +2,7 @@ package com.example.splittab;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -288,6 +289,21 @@ public class GroupManager {
                         }
                     });
                 }
+            }
+        }
+    }
+
+    public void leaveCurrentGroup(Context context) {
+        if(currentGroup == null){
+            Toast.makeText(context, R.string.no_selcted_group, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        for (int i = 0; i < currentParticipant.creditList().size(); i++) {
+            Credit c = currentParticipant.creditList().get(i);
+            if(c.getAmount() != 0){
+                Toast.makeText(context, R.string.credit_not_zero, Toast.LENGTH_SHORT).show();
+                return;
             }
         }
     }
