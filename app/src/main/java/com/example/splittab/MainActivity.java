@@ -35,7 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SelectParticipantsDialog.onMultipleChoiceListener {
+public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +127,4 @@ public class MainActivity extends AppCompatActivity implements SelectParticipant
             return super.onCreateView(name, context, attrs);
         }
 
-    @Override
-
-
-    public void onPositiveButtonClicked(String[] usernameList, ArrayList<Participant> selectedParticipantList) {
-        AddPaymentFragment.selectedParticipantList = selectedParticipantList;
-    }
 }

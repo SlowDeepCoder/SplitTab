@@ -56,4 +56,5 @@
     <string name="ok">Ok</string>
     <string name="leave_group">Leave group</string>
     <string name="enter_participants">Enter participants to add payment</string>
+    <string name="enter_someone_else">Enter someone else to share the payment with</string>
 </resources>
