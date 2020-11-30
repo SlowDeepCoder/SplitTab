@@ -8,6 +8,8 @@ public class Picture {
         this.imgURL = imgURL;
     }
 
+    public Picture(){}
+
     public String getImgURL() {
         return imgURL;
     }
@@ -15,5 +17,5 @@ public class Picture {
     public void setImgURL(String imgURL) {
         this.imgURL = imgURL;
     }
-    public Picture(){}
+
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,10 +22,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.splittab.Adapters.GalleryAdapter;
+import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.FirebaseTemplates.Picture;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
@@ -32,7 +38,9 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImageListener {
@@ -45,11 +53,9 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
     private StorageReference mStorageRef;
     private Bitmap picture;
     private ArrayList<Picture> picturePathList;
-    private static final int NUM_GRID_COLUMNs = 3;
     private GalleryAdapter galleryAdapter;
     private RecyclerView galeryRecycleView;
-    private RecyclerView.Adapter adapter;
-    private StorageReference firebaseStorageRef = storage.getReference().child("firebasephotos");
+    private StorageReference firebaseStorageRef = storage.getReference("firebasephotos");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +65,7 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
         takePhotoButton = view.findViewById(R.id.take_photo_button);
         uploadPhotoButton = view.findViewById(R.id.upload_photo_button);
         uploadPhotoButton.setVisibility(View.GONE);
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mStorageRef = FirebaseStorage.getInstance().getReference("firebasephotos");
 
         picturePathList = new ArrayList<>();
         galleryAdapter = new GalleryAdapter(picturePathList,getContext(), this);
@@ -106,7 +112,7 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             picture.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 
-            String path = "firebasephotos/" + UUID.randomUUID() + ".jpeg";
+            String path = "photos/" + UUID.randomUUID() + ".jpeg";
             StorageReference pathRef = storage.getReference(path);
 
             final byte[] data = outputStream.toByteArray();
@@ -119,10 +125,18 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     Uri downloadUri = uri;
-                                    Log.e("HF", "URI: " + downloadUri);
-                                    //Ska lägga till linken i arraylinklistan
-                                    picturePathList.add(new Picture(downloadUri.toString()));
-                                    //notifydatachanges till gridden
+                                    String downloadURL = downloadUri.toString();
+                                    picturePathList.add(new Picture(downloadURL));
+
+                                    DatabaseReference imageStore = FirebaseDatabase.getInstance().getReference().child("groups").child(GroupManager.getInstance().getCurrentGroup().getKey()).child("photos").push();
+                                    HashMap<String,String> hashMap = new HashMap<>();
+                                    hashMap.put(GroupManager.generateKey(),downloadURL);
+                                    imageStore.setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                        }
+                                    });
                                     galleryAdapter.notifyDataSetChanged();
                                 }
                             });
@@ -158,7 +172,6 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
                                 public void onSuccess(Uri uri) {
                                     Uri downloadUri = uri;
                                     picturePathList.add(new Picture(downloadUri.toString()));
-                                    Log.e("HF", "downloadUri.toString(): "+downloadUri.toString());
                                     galleryAdapter.notifyDataSetChanged();
                                 }
                             });
@@ -173,5 +186,6 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
         Picture clickedImage = picturePathList.get(position);
         String image = clickedImage.getImgURL();
         Picasso.with(getContext()).load(image).into(receiptImageview);
+        uploadPhotoButton.setVisibility(View.GONE);
     }
 }

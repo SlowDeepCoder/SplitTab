@@ -15,6 +15,7 @@ import com.example.splittab.FirebaseTemplates.Credit;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.FirebaseTemplates.Participant;
 import com.example.splittab.FirebaseTemplates.Payment;
+import com.example.splittab.FirebaseTemplates.Picture;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -92,7 +93,9 @@ public class JoinGroupDialog extends DialogFragment {
                                 group.addPayment(dataSnap3.getValue(Payment.class));
                             }
 
-
+                            for (DataSnapshot dataSnapshot4 : dataSnap.child("imageULR").getChildren()){
+                                group.addPictureList(dataSnapshot4.getValue(Picture.class));
+                            }
 
                             ArrayList<Credit> creditList = new ArrayList<>();
                             for(Participant p : group.getParticipantList()){

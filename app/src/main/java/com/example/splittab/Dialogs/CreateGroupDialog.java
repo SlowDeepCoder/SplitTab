@@ -10,21 +10,22 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.splittab.Adapters.PaymentAdapter;
-import com.example.splittab.AddPaymentFragment;
 import com.example.splittab.FirebaseTemplates.Credit;
 import com.example.splittab.FirebaseTemplates.Group;
 import com.example.splittab.FirebaseTemplates.Participant;
+import com.example.splittab.FirebaseTemplates.Picture;
 import com.example.splittab.GroupManager;
 import com.example.splittab.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class CreateGroupDialog extends DialogFragment {
     private EditText editText;
+    private Group group = new Group();
 
 
     @Override
@@ -59,6 +60,7 @@ public class CreateGroupDialog extends DialogFragment {
     private void createGroupAndSaveToFirebase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String imageURL = group.getImageURL();
 
         String groupName = editText.getText().toString().trim();
         if (groupName.length() < 1) {
@@ -67,14 +69,16 @@ public class CreateGroupDialog extends DialogFragment {
         }
 
         String key = GroupManager.generateKey();
-        Group group = new Group(key, groupName, user.getUid());
+        Group group = new Group(key, groupName, user.getUid(), imageURL);
         Participant participant = new Participant(user.getUid(), user.getDisplayName(), 0, new ArrayList<Credit>());
+        Picture picture = new Picture(imageURL);
 
         database.getReference("groups").child(key).setValue(group);
         database.getReference("groups").child(key).child("participants").child(participant.getUserUID()).setValue(participant);
         database.getReference("users").child(user.getUid()).child("groups").child(key).setValue(groupName);
 
         group.addParticipant(participant);
+        group.addPictureList(picture);
         GroupManager groupManager = GroupManager.getInstance();
         groupManager.addGroup(group, getContext());
 

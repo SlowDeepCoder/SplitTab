@@ -1,16 +1,9 @@
 package com.example.splittab.FirebaseTemplates;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.splittab.AddPaymentFragment;
-import com.example.splittab.Dialogs.GroupListDialog;
-import com.example.splittab.GroupManager;
-import com.example.splittab.OverviewFragment;
-import com.example.splittab.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,17 +17,23 @@ public class Group {
     private String key;
     private String name;
     private String creator;
+    private String imageURL;
     private ArrayList<Participant> participantList = new ArrayList<>();
     private ArrayList<Payment> paymentList = new ArrayList<>();
-    //Arraylist med Pictures
+    private ArrayList<Picture> pictureList = new ArrayList<>();
 
-    public Group(String key, String name, String creator) {
+    public Group(String key, String name, String creator, String imageURL) {
         this.key = key;
         this.name = name;
         this.creator = creator;
+        this.imageURL = imageURL;
     }
 
     public Group() {
+    }
+
+    public ArrayList<Picture> getPictureList() {
+        return pictureList;
     }
 
     public String getKey() {
@@ -61,6 +60,12 @@ public class Group {
         this.creator = participants;
     }
 
+    public String getImageURL() { return imageURL; }
+
+    public void setImageURL(String imageURL) { this.imageURL = imageURL; }
+
+    public void addPictureList(Picture picture){ pictureList.add(picture);}
+
     public void addParticipant(Participant participant) {
         participantList.add(participant);
     }
@@ -86,9 +91,7 @@ public class Group {
         final String paymentKey = database.getReference().push().getKey();
         payment.setKey(paymentKey);
 
-
         database.getReference("groups").child(key).child("payments").child(paymentKey).setValue(payment);
-
 
         database.getReference("groups").child(key).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
