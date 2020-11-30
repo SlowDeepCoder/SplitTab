@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -40,7 +41,8 @@ public class AddPaymentFragment extends Fragment {
     private GroupManager paymentManager;
     public static PaymentAdapter paymentAdapter;
     public static ListView paymentListView;
-    public static ArrayList<Participant> selectedParticipantList = new ArrayList<>();
+    //    public static ArrayList<Participant> selectedParticipantList = new ArrayList<>();
+    public static ArrayList<Boolean> selectedBooleans = new ArrayList<>();
     private GroupManager groupManager;
 
     @Override
@@ -55,16 +57,27 @@ public class AddPaymentFragment extends Fragment {
         if (groupManager.getCurrentGroup() != null) {
             paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
 
-            Collections.reverse(groupManager.getCurrentGroup().getPaymentList());
             paymentListView.setAdapter(paymentAdapter);
+            resetSelectedBooleans();
+
         }
         return view;
     }
 
     private void setOnClickListeners() {
+
+
+
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                final ArrayList<Participant> selectedParticipantList = new ArrayList<>();
+                for (int i = 0; i < selectedBooleans.size(); i++) {
+                    if(selectedBooleans.get(i) == true){
+                        selectedParticipantList.add(groupManager.getCurrentGroup().getParticipantList().get(i));
+                    }
+                }
 
                 if (groupManager.getCurrentGroup() == null) {
                     Toast.makeText(getContext(), getResources().getString(R.string.no_group_selected), Toast.LENGTH_SHORT).show();
@@ -83,6 +96,11 @@ public class AddPaymentFragment extends Fragment {
 
                 if (selectedParticipantList.size() < 1) {
                     Toast.makeText(getContext(), getResources().getString(R.string.enter_participants), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (selectedParticipantList.size() == 1 && selectedParticipantList.get(0).equals(groupManager.getCurrentParticipant())) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.enter_someone_else), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -112,9 +130,13 @@ public class AddPaymentFragment extends Fragment {
         selectParticipantsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SelectParticipantsDialog dialog = new SelectParticipantsDialog();
-                dialog.setCancelable(false);
-                dialog.show(getActivity().getSupportFragmentManager(), "Select Participant Dialog");
+                if(groupManager.getCurrentGroup() != null) {
+                    SelectParticipantsDialog dialog = new SelectParticipantsDialog();
+                    dialog.setCancelable(false);
+                    dialog.show(getActivity().getSupportFragmentManager(), "Select Participant Dialog");
+                }
+                else
+                    Toast.makeText(getContext(), R.string.no_group_selected, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -142,7 +164,14 @@ public class AddPaymentFragment extends Fragment {
         amountEditText.setInputType(InputType.TYPE_CLASS_NUMBER);   //Siffertagentbord
         descriptionEditText = (EditText) view.findViewById(R.id.editTextDescription);
         addPaymentButton = (Button) view.findViewById(R.id.add_payment_button);
-        selectParticipantsButton = (Button)view.findViewById(R.id.select_participants_button);
+        selectParticipantsButton = (Button) view.findViewById(R.id.select_participants_button);
         paymentListView = view.findViewById(R.id.lastPaymentListView);
+    }
+
+    public static void resetSelectedBooleans(){
+        selectedBooleans.clear();
+        for (int i = 0; i < GroupManager.getInstance().getCurrentGroup().getParticipantList().size(); i++) {
+            selectedBooleans.add(true);
+        }
     }
 }

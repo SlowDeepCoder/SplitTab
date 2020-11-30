@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.splittab.FirebaseTemplates.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -33,13 +34,14 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-
+    private ProgressBar progressBar;
     private static final int RC_SIGN_IN = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity_layout);
+        progressBar = (ProgressBar)findViewById(R.id.loginProgressBar);
 
         mAuth = FirebaseAuth.getInstance();
         createRequest();
@@ -105,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
     private void newIntentAndSaveUser() {
         final FirebaseUser user = mAuth.getCurrentUser();
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
+        progressBar.setVisibility(View.VISIBLE);
 
         Query checkUser = reference.orderByChild("id").equalTo(user.getUid());
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {

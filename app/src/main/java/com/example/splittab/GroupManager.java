@@ -2,6 +2,7 @@ package com.example.splittab;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class GroupManager {
@@ -49,6 +51,7 @@ public class GroupManager {
             currentGroup = group;
             setCurrentParticipant();
 
+
             AddPaymentFragment.paymentAdapter = new PaymentAdapter(context, R.layout.payment_list_item, getCurrentGroup().getPaymentList());
             AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
             AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
@@ -62,6 +65,7 @@ public class GroupManager {
             OverviewFragment.participantListView.setAdapter(OverviewFragment.creditAdapter);
             OverviewFragment.creditAdapter.notifyDataSetChanged();
 
+            AddPaymentFragment.resetSelectedBooleans();
         }
     }
 
@@ -88,7 +92,7 @@ public class GroupManager {
         if (index < groupList.size() && index >= 0) {
             currentGroup = groupList.get(index);
             setCurrentParticipant();
-            Log.d("setCurrentGroup", "currentGroup satt till " + currentGroup.getName());
+            AddPaymentFragment.resetSelectedBooleans();
         }
     }
 
@@ -136,6 +140,7 @@ public class GroupManager {
                                 for (DataSnapshot dataSnap4 : dataSnap.child("payments").getChildren()) {
                                     group.addPayment(dataSnap4.getValue(Payment.class));
                                 }
+                                Collections.reverse(group.getPaymentList());
                                 groupList.add(group);                          /////  Söker efter varje nyckel och laddar in alla grupper i en lista
                             }
                         }
@@ -285,22 +290,21 @@ public class GroupManager {
                     });
                 }
             }
+        }
+    }
 
+    public void leaveCurrentGroup(Context context) {
+        if(currentGroup == null){
+            Toast.makeText(context, R.string.no_selcted_group, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        for (int i = 0; i < currentParticipant.creditList().size(); i++) {
+            Credit c = currentParticipant.creditList().get(i);
+            if(c.getAmount() != 0){
+                Toast.makeText(context, R.string.credit_not_zero, Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
     }
 }

@@ -35,12 +35,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SelectParticipantsDialog.onMultipleChoiceListener {
+public class MainActivity extends AppCompatActivity  {
+    GroupManager groupManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        groupManager = GroupManager.getInstance();
+
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(4);
@@ -68,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements SelectParticipant
                         Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
                         startActivity(settingsIntent);
                         return true;
+                    case R.id.actionbarLeaveGroup:
+                        groupManager.leaveCurrentGroup(MainActivity.this);
+                        return true;
                     case R.id.actionbarSignOut:
                         FirebaseAuth.getInstance().signOut();
                         Intent LoginIntent = new Intent(MainActivity.this, LoginActivity.class);
@@ -81,35 +87,6 @@ public class MainActivity extends AppCompatActivity implements SelectParticipant
         });
     }
 
-
-
-//        for (final Group group : groupManager.getGroupArrayList()) {
-//            database.getReference("groups").child(group.getKey()).child("payments").addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    if (dataSnapshot.exists()) {
-//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                            for (Payment payment : group.getPaymentList()) {
-//                                if (!snapshot.getValue(Payment.class).getKey().equals(payment.getKey())) {
-//                                    group.addPayment(payment);
-//
-//                                    AddPaymentFragment.paymentAdapter = new PaymentAdapter(MainActivity.this, R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
-//                                    AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
-//                                    AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
-//                                }
-//                            }
-//                        }
-//                    }
-//                    Log.d("onDataChange", "Data change detected in " + group.getKey() + " payments");
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-//
-//        }
 
 
     @SuppressLint("RestrictedApi")
@@ -127,10 +104,4 @@ public class MainActivity extends AppCompatActivity implements SelectParticipant
             return super.onCreateView(name, context, attrs);
         }
 
-    @Override
-
-
-    public void onPositiveButtonClicked(String[] usernameList, ArrayList<Participant> selectedParticipantList) {
-        AddPaymentFragment.selectedParticipantList = selectedParticipantList;
-    }
 }

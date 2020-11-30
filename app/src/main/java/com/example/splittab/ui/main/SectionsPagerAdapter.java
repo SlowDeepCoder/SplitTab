@@ -1,4 +1,4 @@
-package com.example.splittab.ui.main;
+    package com.example.splittab.ui.main;
 
 import android.content.Context;
 
