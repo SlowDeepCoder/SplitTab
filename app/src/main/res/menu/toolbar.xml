@@ -7,11 +7,11 @@
         android:title="Group"
         app:showAsAction="always|withText" />
 
-    <item
-        android:id="@+id/actionbarChat"
-        android:icon="@drawable/chat_icon"
-        android:title="Chat"
-        app:showAsAction="always" />
+<!--    <item-->
+<!--        android:id="@+id/actionbarChat"-->
+<!--        android:icon="@drawable/chat_icon"-->
+<!--        android:title="Chat"-->
+<!--        app:showAsAction="always" />-->
 
     <item
         android:id="@+id/actionbarSettings"

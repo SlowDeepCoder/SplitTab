@@ -1,5 +1,6 @@
 package com.example.splittab;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,4 +33,17 @@ public class OverviewFragment extends Fragment {
         }
         return view;
     }
+
+
+
+//    public static void notifyCreditAdapter(){
+//        if(GroupManager.getInstance().getCurrentGroup() != null) {
+//            if (creditAdapter != null) {
+//                creditAdapter.notifyDataSetChanged();
+//            } else {
+//                creditAdapter = new CreditAdapter(this, R.layout.history_layout, GroupManager.getInstance().getCurrentParticipant().creditList());
+//                participantListView.setAdapter(creditAdapter);
+//            }
+//        }
+//    }
 }

@@ -107,7 +107,7 @@ public class GroupManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot dataSnap : dataSnapshot.getChildren()) {                  /////
-                        groupKeyList.add(dataSnap.getKey());                                    /////  Hittar alla nycklar som finns hos användaren och lägger i ndem i en lista
+                        groupKeyList.add(dataSnap.getKey());                                    /////  Hittar alla nycklar som finns hos användaren och lägger i dem i en lista
                     }                                                                           /////
                 }
             }
@@ -224,11 +224,15 @@ public class GroupManager {
                         for (DataSnapshot snapshot2 : snapshot.child("credit").getChildren()) {
                             participant.addCredit(snapshot2.getValue(Credit.class));
                         }
+                        groupManager.getCurrentParticipant().addCredit(new Credit(0, participant.getUserUID(), participant.getUserName()));
                         group.addParticipant(snapshot.getValue(Participant.class));
                         GroupListDialog.groupAdapter.notifyDataSetChanged();
                         OverviewFragment.creditAdapter.notifyDataSetChanged();
-                    }
 
+                        updateCreditListeners(database, group);
+
+                        AddPaymentFragment.resetSelectedBooleans();
+                    }
                 }
 
                 @Override
@@ -251,44 +255,49 @@ public class GroupManager {
                 }
             });
 
-            for(final Participant p : group.getParticipantList()) {
-                for(final Credit c : p.creditList()) {
-                    database.getReference("groups").child(group.getKey()).child("participants").child(p.getUserUID()).child("credit").addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            updateCreditListeners(database, group);
+        }
+    }
 
-                        }
 
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                            if (snapshot.exists()) {
-                                Log.d("onChildChanged", snapshot.toString());
-                                Credit credit = snapshot.getValue(Credit.class);
-                                for (Credit c2 : p.creditList()) {
-                                    if (c.getUserUID().equals(c2.getUserUID())) {
-                                        c2.setAmount(credit.getAmount());
-                                    }
+    private void updateCreditListeners(FirebaseDatabase database, Group group){
+        for(final Participant p : group.getParticipantList()) {
+            for(final Credit c : p.creditList()) {
+                database.getReference("groups").child(group.getKey()).child("participants").child(p.getUserUID()).child("credit").addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        if (snapshot.exists()) {
+                            Log.d("onChildChanged", snapshot.toString());
+                            Credit credit = snapshot.getValue(Credit.class);
+                            for (Credit c2 : p.creditList()) {
+                                if (c.getUserUID().equals(c2.getUserUID())) {
+                                    c2.setAmount(credit.getAmount());
                                 }
-                                OverviewFragment.creditAdapter.notifyDataSetChanged();
                             }
+                            OverviewFragment.creditAdapter.notifyDataSetChanged();
                         }
+                    }
 
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
-                }
+                    }
+                });
             }
         }
     }
@@ -306,5 +315,8 @@ public class GroupManager {
                 return;
             }
         }
+
+
+
     }
 }
