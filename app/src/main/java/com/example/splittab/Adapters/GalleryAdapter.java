@@ -18,10 +18,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ContactH
     private ArrayList<Picture> picturePathList;
     private Context context;
     public ImageView galleryImageView;
+    private OnImageListener onImageListener;
 
-    public GalleryAdapter(ArrayList<Picture> picturePathList, Context context) {
+    public GalleryAdapter(ArrayList<Picture> picturePathList, Context context, OnImageListener onImageListener) {
         this.picturePathList = picturePathList;
         this.context = context;
+        this.onImageListener = onImageListener;
     }
 
     @NonNull
@@ -29,8 +31,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ContactH
     public ContactHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.gallery_view_item, parent,false);
-        //logga för check
-        return new ContactHolder(view);
+        return new ContactHolder(view, onImageListener);
     }
 
     @Override
@@ -48,15 +49,23 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ContactH
         return picturePathList.size();
     }
 
-    public class ContactHolder extends RecyclerView.ViewHolder{
+    public class ContactHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        OnImageListener onImageListener;
 
-
-        public ContactHolder(@NonNull View itemView) {
+        public ContactHolder(@NonNull View itemView, OnImageListener onImageListener) {
             super(itemView);
-
             galleryImageView = (ImageView)itemView.findViewById(R.id.galery_image_view);
-
+            this.onImageListener = onImageListener;
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onImageListener.onItemClick(getAdapterPosition());
+        }
+    }
+    public interface OnImageListener{
+        void onItemClick(int position);
     }
 }

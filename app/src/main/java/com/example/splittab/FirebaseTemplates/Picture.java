@@ -15,4 +15,5 @@ public class Picture {
     public void setImgURL(String imgURL) {
         this.imgURL = imgURL;
     }
+    public Picture(){}
 }

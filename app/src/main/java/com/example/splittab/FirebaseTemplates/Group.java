@@ -26,6 +26,7 @@ public class Group {
     private String creator;
     private ArrayList<Participant> participantList = new ArrayList<>();
     private ArrayList<Payment> paymentList = new ArrayList<>();
+    //Arraylist med Pictures
 
     public Group(String key, String name, String creator) {
         this.key = key;

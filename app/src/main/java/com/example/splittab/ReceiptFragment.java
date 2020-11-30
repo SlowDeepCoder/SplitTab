@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,14 +29,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class ReceiptFragment extends Fragment {
-
-    //TODO om bilden finns i gallerian ska den inte gå att ladda upp igen
+public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImageListener {
 
     private ImageView receiptImageview;
     private Button takePhotoButton;
@@ -58,10 +58,11 @@ public class ReceiptFragment extends Fragment {
         receiptImageview = view.findViewById(R.id.receipt_imageview);
         takePhotoButton = view.findViewById(R.id.take_photo_button);
         uploadPhotoButton = view.findViewById(R.id.upload_photo_button);
+        uploadPhotoButton.setVisibility(View.GONE);
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         picturePathList = new ArrayList<>();
-        galleryAdapter = new GalleryAdapter(picturePathList,getContext());
+        galleryAdapter = new GalleryAdapter(picturePathList,getContext(), this);
         galeryRecycleView = view.findViewById(R.id.galery_recycleview);
         galeryRecycleView.setAdapter(galleryAdapter);
 
@@ -93,9 +94,10 @@ public class ReceiptFragment extends Fragment {
             Bundle extras = data.getExtras();
             picture = (Bitmap)extras.get("data");
             receiptImageview.setImageBitmap(picture);
+            uploadPhotoButton.setVisibility(View.VISIBLE);
         }
     }
-    //TODO om bilden finns i gallerian ska den inte gå att ladda upp igen
+
     private void uploadPhoto(){
         if(picture != null) {
             final ProgressBar progressBar = getView().findViewById(R.id.progressBar);
@@ -125,6 +127,7 @@ public class ReceiptFragment extends Fragment {
                                 }
                             });
                             Toast.makeText(getActivity().getBaseContext(), "Photo Uploaded", Toast.LENGTH_SHORT).show();
+                            uploadPhotoButton.setVisibility(View.GONE);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -163,5 +166,12 @@ public class ReceiptFragment extends Fragment {
                     }
                 });
         galleryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Picture clickedImage = picturePathList.get(position);
+        String image = clickedImage.getImgURL();
+        Picasso.with(getContext()).load(image).into(receiptImageview);
     }
 }
