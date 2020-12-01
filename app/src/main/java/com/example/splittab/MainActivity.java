@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity  {
             if (groupManager.getCurrentGroup() != null) {
                 ActionMenuItemView item = (ActionMenuItemView) findViewById(R.id.actionbarGroup);
                 item.setTitle(groupManager.getCurrentGroup().getName());
-
             }
 
             return super.onCreateView(name, context, attrs);

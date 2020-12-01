@@ -1,11 +1,16 @@
 package com.example.splittab;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.ActionMenuItemView;
 
 import com.example.splittab.Adapters.CreditAdapter;
 import com.example.splittab.Adapters.PaymentAdapter;
@@ -74,12 +79,16 @@ public class GroupManager {
     }
 
 
-    private void setCurrentParticipant(){
+    private void setCurrentParticipant() {
+        if (currentGroup == null) {
+            currentParticipant = null;
+            return;
+        }
         for (Participant p : currentGroup.getParticipantList()) {
-            if(p.getUserUID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            if (p.getUserUID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                 currentParticipant = p;
                 Log.d("setCurrentParticipant", "currentParticipant satt");
-                Log.d("setCurrentParticipant", currentParticipant.creditList().size()+"");
+                Log.d("setCurrentParticipant", currentParticipant.creditList().size() + "");
             }
         }
     }
@@ -88,15 +97,50 @@ public class GroupManager {
         return currentParticipant;
     }
 
-    public void setCurrentGroup(int index) {
+    @SuppressLint("RestrictedApi")
+    public void setCurrentGroup(int index, Activity activity) {
+        ActionMenuItemView item = (ActionMenuItemView) activity.findViewById(R.id.actionbarGroup);
         if (index < groupList.size() && index >= 0) {
             currentGroup = groupList.get(index);
             setCurrentParticipant();
             AddPaymentFragment.resetSelectedBooleans();
+
+            AddPaymentFragment.paymentAdapter = new PaymentAdapter(activity, R.layout.payment_list_item, currentGroup.getPaymentList());
+            if (AddPaymentFragment.paymentListView != null)
+                AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
+            AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
+
+            HistoryFragment.historyAdapter = new PaymentAdapter(activity, R.layout.payment_list_item, currentGroup.getPaymentList());
+            if (HistoryFragment.historyListView != null)
+                HistoryFragment.historyListView.setAdapter(AddPaymentFragment.paymentAdapter);
+            HistoryFragment.historyAdapter.notifyDataSetChanged();
+
+            OverviewFragment.creditAdapter = new CreditAdapter(activity, R.layout.payment_list_item, currentParticipant.creditList());
+            if (OverviewFragment.participantListView != null)
+                OverviewFragment.participantListView.setAdapter(OverviewFragment.creditAdapter);
+            OverviewFragment.creditAdapter.notifyDataSetChanged();
+
+            if (item != null)
+                item.setTitle(currentGroup.getName());
+        } else {
+            currentGroup = null;
+            AddPaymentFragment.paymentAdapter = null;
+            HistoryFragment.historyAdapter = null;
+            OverviewFragment.creditAdapter = null;
+
+            if (AddPaymentFragment.paymentListView != null)
+                AddPaymentFragment.paymentListView.setAdapter(null);
+            if (HistoryFragment.historyListView != null)
+                HistoryFragment.historyListView.setAdapter(null);
+            if (OverviewFragment.participantListView != null)
+                OverviewFragment.participantListView.setAdapter(null);
+
+            if (item != null)
+                item.setTitle(activity.getResources().getString(R.string.no_group));
         }
     }
 
-    public void loadGroupsFromFireBase() {
+    public void loadGroupsFromFireBase(final Activity activity) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final ArrayList<String> groupKeyList = new ArrayList<>();
@@ -145,7 +189,7 @@ public class GroupManager {
                             }
                         }
                     }
-                    setCurrentGroup(0);
+                    setCurrentGroup(0, activity);
                     setFirebasePaymentAndParticipantsListeners();
                 }
             }
@@ -241,7 +285,47 @@ public class GroupManager {
 
                 @Override
                 public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    Participant removedParticipant = snapshot.getValue(Participant.class);
+                    for (int i = 0; i < group.getParticipantList().size(); i++) {
+                        Participant participant = group.getParticipantList().get(i);
+                        if (participant.getUserUID().equals(removedParticipant.getUserUID())) {
+                            group.removeParticipant(participant);
 
+                            for (Participant p : group.getParticipantList()) {
+                                for (Credit c : p.creditList()) {
+                                    if (c.getUserUID().equals(removedParticipant.getUserUID())) {
+                                        p.removeCredit(c);
+                                        database.getReference("groups").child(group.getKey()).child("participants").child(p.getUserUID()).child("credit").child(removedParticipant.getUserUID()).removeValue();
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (OverviewFragment.creditAdapter != null)
+                                OverviewFragment.creditAdapter.notifyDataSetChanged();
+                            if (GroupListDialog.groupAdapter != null)
+                                GroupListDialog.groupAdapter.notifyDataSetChanged();
+
+
+                            AddPaymentFragment.resetSelectedBooleans();
+
+                            database.getReference("groups").child(group.getKey()).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(!snapshot.exists()){
+                                        database.getReference("groups").child(group.getKey()).removeValue();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+                            break;
+                        }
+                    }
                 }
 
                 @Override
@@ -260,9 +344,9 @@ public class GroupManager {
     }
 
 
-    private void updateCreditListeners(FirebaseDatabase database, Group group){
-        for(final Participant p : group.getParticipantList()) {
-            for(final Credit c : p.creditList()) {
+    private void updateCreditListeners(FirebaseDatabase database, Group group) {
+        for (final Participant p : group.getParticipantList()) {
+            for (final Credit c : p.creditList()) {
                 database.getReference("groups").child(group.getKey()).child("participants").child(p.getUserUID()).child("credit").addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -302,21 +386,24 @@ public class GroupManager {
         }
     }
 
-    public void leaveCurrentGroup(Context context) {
-        if(currentGroup == null){
-            Toast.makeText(context, R.string.no_selcted_group, Toast.LENGTH_SHORT).show();
+    public void leaveCurrentGroup(Activity activity) {
+        if (currentGroup == null) {
+            Toast.makeText(activity, R.string.no_selcted_group, Toast.LENGTH_SHORT).show();
             return;
         }
 
         for (int i = 0; i < currentParticipant.creditList().size(); i++) {
             Credit c = currentParticipant.creditList().get(i);
-            if(c.getAmount() != 0){
-                Toast.makeText(context, R.string.credit_not_zero, Toast.LENGTH_SHORT).show();
+            if (c.getAmount() != 0) {
+                Toast.makeText(activity, R.string.credit_not_zero, Toast.LENGTH_SHORT).show();
                 return;
             }
         }
-
-
-
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.getReference("groups").child(currentGroup.getKey()).child("participants").child(currentParticipant.getUserUID()).removeValue();
+        database.getReference("users").child(currentParticipant.getUserUID()).child("groups").child(currentGroup.getKey()).removeValue();
+        groupList.remove(currentGroup);
+        setCurrentGroup(0, activity);
+        setCurrentParticipant();
     }
 }

@@ -51,4 +51,9 @@ public class Participant {
     public ArrayList<Credit> creditList() {
         return creditList;
     }
+
+    public void removeCredit(Credit c) {
+        if (c != null)
+            creditList.remove(c);
+    }
 }

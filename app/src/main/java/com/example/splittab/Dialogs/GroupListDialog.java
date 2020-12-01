@@ -68,22 +68,7 @@ public class GroupListDialog extends DialogFragment {
             @SuppressLint("RestrictedApi")
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                groupManager.setCurrentGroup(i);
-                ActionMenuItemView item = (ActionMenuItemView)getActivity().findViewById(R.id.actionbarGroup);
-                item.setTitle(groupManager.getCurrentGroup().getName());
-
-                AddPaymentFragment.paymentAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
-                AddPaymentFragment.paymentListView.setAdapter(AddPaymentFragment.paymentAdapter);
-                AddPaymentFragment.paymentAdapter.notifyDataSetChanged();
-
-                HistoryFragment.historyAdapter = new PaymentAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentGroup().getPaymentList());
-                HistoryFragment.historyListView.setAdapter(AddPaymentFragment.paymentAdapter);
-                HistoryFragment.historyAdapter.notifyDataSetChanged();
-
-                OverviewFragment.creditAdapter = new CreditAdapter(getContext(), R.layout.payment_list_item, groupManager.getCurrentParticipant().creditList());
-                OverviewFragment.participantListView.setAdapter(OverviewFragment.creditAdapter);
-                OverviewFragment.creditAdapter.notifyDataSetChanged();
-
+                groupManager.setCurrentGroup(i, getActivity());
                 dismiss();
             }
         });

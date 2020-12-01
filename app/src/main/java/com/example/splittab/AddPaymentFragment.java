@@ -67,22 +67,23 @@ public class AddPaymentFragment extends Fragment {
     private void setOnClickListeners() {
 
 
-
         addPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                final ArrayList<Participant> selectedParticipantList = new ArrayList<>();
-                for (int i = 0; i < selectedBooleans.size(); i++) {
-                    if(selectedBooleans.get(i) == true){
-                        selectedParticipantList.add(groupManager.getCurrentGroup().getParticipantList().get(i));
-                    }
-                }
 
                 if (groupManager.getCurrentGroup() == null) {
                     Toast.makeText(getContext(), getResources().getString(R.string.no_group_selected), Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                final ArrayList<Participant> selectedParticipantList = new ArrayList<>();
+                for (int i = 0; i < selectedBooleans.size(); i++) {
+                    if (selectedBooleans.get(i) == true) {
+                        selectedParticipantList.add(groupManager.getCurrentGroup().getParticipantList().get(i));
+                    }
+                }
+
 
                 if (amountEditText.getText().toString().length() < 1) {
                     Toast.makeText(getContext(), getResources().getString(R.string.enter_amount_to_add_payment), Toast.LENGTH_SHORT).show();
@@ -130,12 +131,11 @@ public class AddPaymentFragment extends Fragment {
         selectParticipantsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(groupManager.getCurrentGroup() != null) {
+                if (groupManager.getCurrentGroup() != null) {
                     SelectParticipantsDialog dialog = new SelectParticipantsDialog();
                     dialog.setCancelable(false);
                     dialog.show(getActivity().getSupportFragmentManager(), "Select Participant Dialog");
-                }
-                else
+                } else
                     Toast.makeText(getContext(), R.string.no_group_selected, Toast.LENGTH_SHORT).show();
             }
         });
@@ -168,8 +168,10 @@ public class AddPaymentFragment extends Fragment {
         paymentListView = view.findViewById(R.id.lastPaymentListView);
     }
 
-    public static void resetSelectedBooleans(){
+    public static void resetSelectedBooleans() {
         selectedBooleans.clear();
+        if (GroupManager.getInstance().getCurrentGroup() == null)
+            return;
         for (int i = 0; i < GroupManager.getInstance().getCurrentGroup().getParticipantList().size(); i++) {
             selectedBooleans.add(true);
         }

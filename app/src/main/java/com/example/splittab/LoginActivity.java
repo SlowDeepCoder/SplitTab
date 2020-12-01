@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                     reference.child(user.getUid()).setValue(new User(user.getDisplayName(), user.getEmail(), user.getUid()));       // New user
                     Log.d("newIntentAndSaveUser", "New user, saving data");
                 } else {
-                    GroupManager.getInstance().loadGroupsFromFireBase();        //Old user, load group data
+                    GroupManager.getInstance().loadGroupsFromFireBase(LoginActivity.this);        //Old user, load group data
                     Log.d("newIntentAndSaveUser", "Old user, data not saved");
                 }
 

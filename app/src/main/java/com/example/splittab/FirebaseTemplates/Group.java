@@ -60,11 +60,17 @@ public class Group {
         this.creator = participants;
     }
 
-    public String getImageURL() { return imageURL; }
+    public String getImageURL() {
+        return imageURL;
+    }
 
-    public void setImageURL(String imageURL) { this.imageURL = imageURL; }
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
-    public void addPictureList(Picture picture){ pictureList.add(picture);}
+    public void addPictureList(Picture picture) {
+        pictureList.add(picture);
+    }
 
     public void addParticipant(Participant participant) {
         participantList.add(participant);
@@ -138,7 +144,6 @@ public class Group {
 //                                database.getReference("groups").child(key).child("participants").child(p.getUserUID()).child("credit").child(p2.getUserUID()).child("amount").setValue(newAmount);
 //                        }
 //                    }
-
 
 
                 }
@@ -218,11 +223,11 @@ public class Group {
 //            public void onCancelled(@NonNull DatabaseError error) {
 //
     }
-//        });
-//
-//
-    //
-    //   Notify on data changed!
-    //
+
+    public void removeParticipant(Participant p) {
+        if (p != null) {
+            participantList.remove(p);
+        }
+    }
 //    }
 }
