@@ -1,1 +1,1 @@
-# SplitTab
+# SplitIt
