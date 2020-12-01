@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@drawable/splititbakrund"
     tools:context=".LoginActivity">
 
     <ImageView
@@ -12,7 +13,6 @@
         android:layout_width="0dp"
         android:layout_height="195dp"
         android:layout_marginTop="32dp"
-        android:src="@drawable/hands_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
