@@ -1,5 +1,6 @@
 package com.example.splittab;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,15 +23,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.splittab.Adapters.GalleryAdapter;
+import com.example.splittab.FirebaseTemplates.Credit;
 import com.example.splittab.FirebaseTemplates.Group;
+import com.example.splittab.FirebaseTemplates.Participant;
+import com.example.splittab.FirebaseTemplates.Payment;
 import com.example.splittab.FirebaseTemplates.Picture;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
@@ -40,7 +47,9 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.security.Key;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImageListener {
@@ -72,7 +81,8 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
         galeryRecycleView = view.findViewById(R.id.galery_recycleview);
         galeryRecycleView.setAdapter(galleryAdapter);
 
-        loadImages();
+        loadSampleImages();
+        loadImagesRealtimeDatabase();
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,7 +166,7 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
         }
     }
 
-    public void loadImages(){
+    public void loadSampleImages(){
      firebaseStorageRef.listAll()
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
@@ -179,6 +189,30 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
                     }
                 });
         galleryAdapter.notifyDataSetChanged();
+    }
+
+    public void loadImagesRealtimeDatabase(){
+        final DatabaseReference realtimeDatabaseImage = FirebaseDatabase.getInstance().getReference().child("groups").child(GroupManager.getInstance().getCurrentGroup().getKey()).child("photos");
+        realtimeDatabaseImage.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds : snapshot.getChildren()){
+                    String imageURLFull;
+                    for (DataSnapshot ds2 : ds.getChildren()) {
+                        imageURLFull = ds2.getValue(String.class);
+                        Log.d("HF", "ds2.getValue(String.class "+ imageURLFull);
+                        picturePathList.add(new Picture(imageURLFull));
+                    }
+                }
+                galleryAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override
