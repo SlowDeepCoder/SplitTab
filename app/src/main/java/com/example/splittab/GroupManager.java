@@ -358,10 +358,10 @@ public class GroupManager {
                         if (snapshot.exists()) {
                             Log.d("onChildChanged", snapshot.toString());
                             Credit credit = snapshot.getValue(Credit.class);
-                            for (Credit c2 : p.creditList()) {
-                                if (c.getUserUID().equals(c2.getUserUID())) {
-                                    c2.setAmount(credit.getAmount());
-                                }
+//                            for (Credit c2 : p.creditList()) {
+                                if (c.getUserUID().equals(credit.getUserUID())) {
+                                    c.setAmount(credit.getAmount());
+//                                }
                             }
                             OverviewFragment.creditAdapter.notifyDataSetChanged();
                         }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SplitIab</string>
+    <string name="app_name">SplitIt</string>
     <string name="tab_text_1">Add Payment</string>
     <string name="tab_text_2">History</string>
     <string name="tab_text_3">Overview</string>
@@ -28,7 +28,7 @@
     <string name="channel">Channel:</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="sign_out">Sign out</string>
-    <string name="app_title">SplitTab</string>
+    <string name="app_title">SplitIt</string>
     <string name="cancel">Cancel</string>
     <string name="add_group">Add group</string>
     <string name="join_group">Join group</string>
