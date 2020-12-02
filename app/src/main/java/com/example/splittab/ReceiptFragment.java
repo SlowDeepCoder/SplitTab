@@ -82,7 +82,7 @@ public class ReceiptFragment extends Fragment  implements GalleryAdapter.OnImage
         galeryRecycleView.setAdapter(galleryAdapter);
 
         loadSampleImages();
-        loadImagesRealtimeDatabase();
+        if(GroupManager.getInstance().getCurrentGroup() != null){loadImagesRealtimeDatabase();}
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

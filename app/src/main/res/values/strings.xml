@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SplitTab</string>
+    <string name="app_name">SplitIab</string>
     <string name="tab_text_1">Add Payment</string>
     <string name="tab_text_2">History</string>
     <string name="tab_text_3">Overview</string>
